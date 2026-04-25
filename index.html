@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Archive | Minimal</title>
+    <!-- Three.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        :root {
+            --bg: #000;
+            --fg: #fff;
+            --accent: #222;
+            --hover: #444;
+            --overlay: rgba(0, 0, 0, 0.7);
+        }
+
+        /* Prevents horizontal scroll on mobile */
+        * { box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--fg);
+            font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, monospace;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+
+        /* Hero Header Section */
+        .header {
+            width: 100%;
+            max-width: 800px; 
+            position: relative;
+            margin-bottom: 40px;
+            overflow: hidden;
+            border: 1px solid var(--accent);
+            border-radius: 16px;
+        }
+
+        .banner-container {
+            width: 100%;
+            aspect-ratio: 16 / 7;
+            position: relative;
+            background: #111;
+        }
+
+        .banner-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: 50% 30%;
+            display: block;
+            filter: grayscale(20%) brightness(80%);
+        }
+
+        /* Encapsulated text centered over the top portion */
+        .header-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--overlay) 0%, transparent 60%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding-top: 30px; 
+            text-align: center;
+            backdrop-filter: blur(2px);
+        }
+
+        h1 {
+            font-size: 1.4rem;
+            font-weight: 300;
+            letter-spacing: 0.4rem;
+            text-transform: uppercase;
+            margin: 0 0 12px 0;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+        }
+
+        .contact-info {
+            font-size: 0.7rem;
+            color: #ccc;
+            line-height: 1.6;
+            letter-spacing: 0.05rem;
+            max-width: 90%;
+        }
+
+        .contact-info a {
+            color: var(--fg);
+            text-decoration: none;
+            border-bottom: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 640px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            padding-bottom: 60px;
+        }
+
+        /* The Card Styling */
+        .card {
+            border: 1px solid var(--accent);
+            border-radius: 4px;
+            overflow: hidden;
+            transition: all 0.2s ease-in-out;
+            background: #050505;
+            position: relative;
+        }
+
+        .card:hover {
+            border-color: var(--hover);
+            transform: translateY(-2px);
+        }
+
+        .card-header {
+            padding: 12px 15px;
+            background: #0a0a0a;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75rem;
+            border-bottom: 1px solid var(--accent);
+        }
+
+        .card-header a {
+            color: var(--fg);
+            text-decoration: none;
+            opacity: 0.5;
+            transition: opacity 0.2s;
+        }
+
+        .card-header a:hover {
+            opacity: 1;
+        }
+
+        .preview-window {
+            width: 100%;
+            height: 340px;
+            background: #000;
+            border: none;
+            display: block;
+        }
+
+        /* 3D Viewport Specifics */
+        #canvas-3d {
+            width: 100%;
+            height: 340px;
+            cursor: move;
+            position: relative;
+            background: #000;
+        }
+
+        .controls-3d {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            display: flex;
+            gap: 5px;
+            z-index: 10;
+        }
+
+        .btn-3d {
+            background: rgba(0,0,0,0.8);
+            border: 1px solid var(--accent);
+            color: #666;
+            padding: 4px 8px;
+            font-size: 0.6rem;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        .btn-3d.active {
+            color: var(--fg);
+            border-color: #555;
+        }
+
+        .legend-3d {
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+            background: rgba(0,0,0,0.6);
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid var(--accent);
+            font-size: 0.6rem;
+            color: #aaa;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .legend-item { display: flex; align-items: center; gap: 8px; }
+        .legend-color { width: 8px; height: 8px; border-radius: 50%; }
+
+        .doc-preview {
+            height: 500px;
+        }
+
+        .label {
+            color: #555;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2rem;
+            margin-bottom: -8px;
+            margin-top: 10px;
+        }
+
+        /* Mobile specific adjustments */
+        @media (max-width: 600px) {
+            body { padding: 20px 15px; }
+            .header-overlay { padding-top: 20px; }
+            h1 { font-size: 1rem; letter-spacing: 0.2rem; }
+            .contact-info { font-size: 0.6rem; }
+            .preview-window, #canvas-3d { height: 280px; }
+            .doc-preview { height: 400px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="banner-container">
+            <img src="https://drive.google.com/thumbnail?id=1fm1OZsRIB-yMqW3mDRSGyaUb0zMQYzoT&sz=w1000" alt="Kevin Kiatsupaibul Banner" class="banner-img">
+            
+            <div class="header-overlay">
+                <h1>KEVIN KIATSUPAIBUL</h1>
+                <div class="contact-info">
+                    Product Quality Engineering Intern @ ChargePoint | MSE Student @ UC Berkeley<br>
+                    Fremont, CA 94539 • (408) 823-4142<br>
+                    <a href="mailto:kevinkiat@berkeley.edu">kevinkiat@berkeley.edu</a> • 
+                    <a href="https://www.linkedin.com/in/kevin-kiat/" target="_blank">linkedin.com/in/kevin-kiat</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        
+        <div class="label">Primary_Docs</div>
+
+        <!-- 01. RESUME CARD -->
+        <div class="card">
+            <div class="card-header">
+                <span>01. Resume_Kevin_Kiat.pdf</span>
+                <a href="https://docs.google.com/document/d/1P-prGaILmvF7YjAoNsR41xTJ_LEBx_ugW3urtpbEfg0/edit?usp=sharing" target="_blank">View ↗</a>
+            </div>
+            <iframe class="preview-window doc-preview" src="https://docs.google.com/document/d/1P-prGaILmvF7YjAoNsR41xTJ_LEBx_ugW3urtpbEfg0/preview" loading="lazy"></iframe>
+        </div>
+
+        <div class="label">3D_Lattice_Viewer</div>
+
+        <!-- 02. LATTICE VIEWER CARD -->
+        <div class="card">
+            <div class="card-header">
+                <span id="lattice-title">MAPbI3_Perovskite.exe</span>
+                <span style="opacity:0.4;">INTERACTIVE</span>
+            </div>
+            <div id="canvas-3d">
+                <div class="controls-3d">
+                    <button class="btn-3d active" onclick="updateLattice('MAPbI3', event)">MAPbI3</button>
+                    <button class="btn-3d" onclick="updateLattice('Y2Ti2O7', event)">Y2Ti2O7</button>
+                </div>
+                <div class="legend-3d" id="lattice-legend"></div>
+            </div>
+        </div>
+
+        <div class="label">Media_Vault</div>
+
+        <!-- 03. VIDEO CARD -->
+        <div class="card">
+            <div class="card-header">
+                <span>03. blender_donut.mkv</span>
+                <a href="https://drive.google.com/file/d/1KV6zlaPXGlicHngmnxwL-McG-nBhZa4x/view?usp=sharing" target="_blank">View ↗</a>
+            </div>
+            <iframe class="preview-window" src="https://drive.google.com/file/d/1KV6zlaPXGlicHngmnxwL-McG-nBhZa4x/preview" allow="autoplay" loading="lazy"></iframe>
+        </div>
+
+    </div>
+
+    <script>
+        // THREE.JS IMPLEMENTATION
+        const container = document.getElementById('canvas-3d');
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        
+        renderer.setSize(container.clientWidth, container.clientHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        container.appendChild(renderer.domElement);
+
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        scene.add(ambientLight);
+        const pointLight = new THREE.PointLight(0xffffff, 1);
+        pointLight.position.set(5, 5, 5);
+        scene.add(pointLight);
+
+        let activeLattice = new THREE.Group();
+        scene.add(activeLattice);
+        camera.position.z = 5;
+
+        // Atom Geometries
+        const geoS = new THREE.SphereGeometry(0.12, 32, 32);
+        const geoM = new THREE.SphereGeometry(0.2, 32, 32);
+        const geoL = new THREE.SphereGeometry(0.3, 32, 32);
+
+        const legends = {
+            'MAPbI3': [
+                { name: 'Lead (Pb)', color: '#888888' },
+                { name: 'Iodide (I)', color: '#800080' },
+                { name: 'MA Cation', color: '#008080' }
+            ],
+            'Y2Ti2O7': [
+                { name: 'Yttrium (Y)', color: '#ffff00' },
+                { name: 'Titanium (Ti)', color: '#0000ff' },
+                { name: 'Oxygen (O)', color: '#ff0000' }
+            ]
+        };
+
+        function clearLattice() {
+            while(activeLattice.children.length > 0){ 
+                activeLattice.remove(activeLattice.children[0]); 
+            }
+        }
+
+        function createAtom(geo, color, pos) {
+            const mat = new THREE.MeshPhongMaterial({ color, shininess: 80 });
+            const atom = new THREE.Mesh(geo, mat);
+            atom.position.set(...pos);
+            activeLattice.add(atom);
+        }
+
+        function createLink(start, end, color = 0x333333, radius = 0.02) {
+            const s = new THREE.Vector3(...start);
+            const e = new THREE.Vector3(...end);
+            const dist = s.distanceTo(e);
+            const geo = new THREE.CylinderGeometry(radius, radius, dist, 8);
+            const mat = new THREE.MeshPhongMaterial({ color });
+            const cylinder = new THREE.Mesh(geo, mat);
+            cylinder.position.copy(s.clone().lerp(e, 0.5));
+            cylinder.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), e.clone().sub(s).normalize());
+            activeLattice.add(cylinder);
+        }
+
+        function updateLegendUI(type) {
+            const legendEl = document.getElementById('lattice-legend');
+            legendEl.innerHTML = '';
+            legends[type].forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'legend-item';
+                div.innerHTML = `<div class="legend-color" style="background:${item.color}"></div><span>${item.name}</span>`;
+                legendEl.appendChild(div);
+            });
+        }
+
+        function buildMAPbI3() {
+            document.getElementById('lattice-title').innerText = "MAPbI3_Perovskite.exe";
+            updateLegendUI('MAPbI3');
+            const pb = [[-1.5,-1.5,-1.5], [1.5,-1.5,-1.5], [-1.5,1.5,-1.5], [1.5,1.5,-1.5], [-1.5,-1.5,1.5], [1.5,-1.5,1.5], [-1.5,1.5,1.5], [1.5,1.5,1.5]];
+            pb.forEach(p => createAtom(geoM, 0x888888, p));
+            const i = [[0,-1.5,-1.5], [0,1.5,-1.5], [0,-1.5,1.5], [0,1.5,1.5], [-1.5,0,-1.5], [1.5,0,-1.5], [-1.5,0,1.5], [1.5,0,1.5], [-1.5,-1.5,0], [1.5,-1.5,0], [-1.5,1.5,0], [1.5,1.5,0]];
+            i.forEach(p => createAtom(geoS, 0x800080, p));
+            createAtom(geoL, 0x008080, [0,0,0]);
+            
+            pb.forEach(p => {
+                i.forEach(ip => {
+                    if (new THREE.Vector3(...p).distanceTo(new THREE.Vector3(...ip)) < 1.6) createLink(p, ip, 0x444444);
+                });
+            });
+        }
+
+        function buildY2Ti2O7() {
+            document.getElementById('lattice-title').innerText = "Y2Ti2O7_Pyrochlore.exe";
+            updateLegendUI('Y2Ti2O7');
+            const y = [[-1.2,0,0], [1.2,0,0], [0,-1.2,0], [0,1.2,0]];
+            y.forEach(p => createAtom(geoM, 0xffff00, p));
+            const ti = [[0,0,-1.2], [0,0,1.2], [0.8,0.8,0.8], [-0.8,-0.8,-0.8]];
+            ti.forEach(p => createAtom(geoS, 0x0000ff, p));
+            const o = [[-0.6, -0.6, 0], [0.6, 0.6, 0], [0, -0.6, -0.6], [0, 0.6, 0.6]];
+            o.forEach(p => createAtom(geoS, 0xff0000, p));
+            
+            y.forEach(yp => o.forEach(op => { if(new THREE.Vector3(...yp).distanceTo(new THREE.Vector3(...op)) < 1.2) createLink(yp, op, 0x660000); }));
+            ti.forEach(tp => o.forEach(op => { if(new THREE.Vector3(...tp).distanceTo(new THREE.Vector3(...op)) < 1.2) createLink(tp, op, 0x000066); }));
+        }
+
+        window.updateLattice = (type, event) => {
+            clearLattice();
+            document.querySelectorAll('.btn-3d').forEach(b => b.classList.remove('active'));
+            if(event) event.target.classList.add('active');
+            if(type === 'MAPbI3') buildMAPbI3();
+            if(type === 'Y2Ti2O7') buildY2Ti2O7();
+        };
+
+        // Initialize
+        updateLattice('MAPbI3');
+
+        let isDragging = false;
+        let prevMouse = { x: 0, y: 0 };
+        container.addEventListener('mousedown', () => isDragging = true);
+        window.addEventListener('mouseup', () => isDragging = false);
+        window.addEventListener('mousemove', e => {
+            if (isDragging) {
+                activeLattice.rotation.y += (e.offsetX - prevMouse.x) * 0.01;
+                activeLattice.rotation.x += (e.offsetY - prevMouse.y) * 0.01;
+            }
+            prevMouse = { x: e.offsetX, y: e.offsetY };
+        });
+
+        function animate() {
+            requestAnimationFrame(animate);
+            if (!isDragging) activeLattice.rotation.y += 0.005;
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = container.clientWidth / container.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(container.clientWidth, container.clientHeight);
+        });
+    </script>
+
+</body>
+</html>
