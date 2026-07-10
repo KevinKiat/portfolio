@@ -49,8 +49,8 @@ h1 { font-size: 1.4rem; font-weight: 300; letter-spacing: 0.4rem; text-transform
   .contact-info { font-size: 0.6rem; }
   .preview-window, #canvas-3d { height: 280px; }
   .doc-preview { height: 600px; }
-  .game-preview { height: 480px; }
 }
+
 </style>
 </head>
 <body>
@@ -117,7 +117,911 @@ h1 { font-size: 1.4rem; font-weight: 300; letter-spacing: 0.4rem; text-transform
       <span>04. ChargeBlaster.exe</span>
       <a href="chargepoint-bullethell.html" target="_blank">Open &#8599;</a>
     </div>
-    <iframe class="preview-window game-preview" src="chargepoint-bullethell.html" loading="lazy"></iframe>
+    <iframe srcdoc="<!DOCTYPE html>
+<html lang=&quot;en&quot;>
+<head>
+<meta charset=&quot;UTF-8&quot;>
+<title>ChargeBlaster — ChargePoint</title>
+<style>
+  :root {
+    color-scheme: light;
+    --cp-orange:      #f86a1b;
+    --cp-dark-blue:   #0e5789;
+    --cp-mid-blue:    #50a0d9;
+    --cp-steel-blue:  #799cae;
+    --cp-light-blue:  #94d2e9;
+    --cp-yellow:      #fbb315;
+    --cp-green:       #6ba239;
+    --cp-red:         #c91f16;
+    --cp-dark:        #212121;
+    --cp-dark-gray:   #545454;
+    --cp-gray:        #797a7d;
+    --cp-light-gray:  #f2f2f2;
+    --cp-white:       #ffffff;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background: var(--cp-dark-blue);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    font-family: 'Arial', 'Helvetica Neue', Helvetica, sans-serif;
+    overflow: hidden;
+  }
+
+  /* Orange top stripe */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 5px;
+    background: var(--cp-orange);
+    z-index: 9999;
+  }
+
+  #wrap {
+    position: relative;
+    width: 720px;
+    height: 540px;
+    max-width: 100vw;
+  }
+
+  canvas {
+    display: block;
+    border-radius: 2px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(248,106,27,0.3);
+  }
+
+  /* ── Overlays ─────────────────────────────────────────────────────────── */
+  .overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 2px;
+    text-align: center;
+    padding: 32px 40px 48px;
+    background: var(--cp-dark-blue);
+    /* Orange left accent bar */
+    border-left: 6px solid var(--cp-orange);
+  }
+  .hidden { display: none !important; }
+
+  /* Start screen */
+  .cp-eyebrow {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--cp-orange);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  h1 {
+    font-size: 48px;
+    font-weight: 900;
+    color: var(--cp-white);
+    line-height: 1;
+    margin-bottom: 6px;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+  h1 span { color: var(--cp-orange); }
+
+  .cp-tagline {
+    font-size: 14px;
+    color: var(--cp-light-blue);
+    margin-bottom: 28px;
+    font-weight: 400;
+  }
+
+  /* Button — orange CTA */
+  .btn {
+    background: var(--cp-orange);
+    color: var(--cp-white);
+    border: none;
+    padding: 13px 36px;
+    border-radius: 2px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-family: 'Arial', sans-serif;
+    transition: background .15s, transform .1s;
+    box-shadow: 0 2px 12px rgba(248,106,27,0.4);
+  }
+  .btn:hover { background: #e05510; transform: translateY(-1px); }
+  .btn:active { transform: translateY(0); }
+
+  /* Instructions card */
+  .cp-instructions {
+    margin-top: 22px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-top: 3px solid var(--cp-orange);
+    border-radius: 2px;
+    padding: 12px 20px;
+    font-size: 12px;
+    color: var(--cp-light-blue);
+    line-height: 2;
+    text-align: left;
+  }
+  .cp-instructions strong { color: var(--cp-orange); }
+
+  /* Upgrade cards row */
+  .cp-upgrades {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-top: 18px;
+    width: 100%;
+  }
+  .cp-upgrade-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-top: 3px solid var(--cp-orange);
+    border-radius: 2px;
+    padding: 8px 6px;
+    font-size: 10px;
+    color: var(--cp-light-blue);
+    text-align: center;
+  }
+  .cp-upgrade-card .uc-name { font-weight: 700; color: var(--cp-white); font-size: 11px; }
+
+  /* Game over */
+  #goScreen h2 {
+    font-size: 36px;
+    font-weight: 900;
+    color: var(--cp-white);
+    margin-bottom: 4px;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+  #goScreen .go-sub {
+    font-size: 13px;
+    color: var(--cp-light-blue);
+    margin-bottom: 20px;
+  }
+  .cp-stats-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin-bottom: 22px;
+    text-align: left;
+  }
+  .cp-stats-table td {
+    padding: 7px 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    color: var(--cp-light-blue);
+  }
+  .cp-stats-table td:first-child { color: var(--cp-steel-blue); font-weight: 700; width: 55%; }
+  .cp-stats-table td strong { color: var(--cp-orange); font-size: 15px; }
+  .cp-stats-table tr:last-child td { border-bottom: none; }
+
+  /* Wave tag */
+  #waveTag {
+    position: absolute;
+    top: 12px; left: 50%; transform: translateX(-50%);
+    background: var(--cp-dark-blue);
+    border: 1px solid var(--cp-orange);
+    color: var(--cp-white);
+    font-size: 11px;
+    font-weight: 700;
+    font-family: 'Arial', sans-serif;
+    padding: 4px 16px;
+    border-radius: 2px;
+    pointer-events: none;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  /* Pause button */
+  #pauseBtn {
+    position: absolute;
+    top: 10px; right: 10px;
+    background: var(--cp-dark-blue);
+    border: 1px solid var(--cp-orange);
+    color: var(--cp-white);
+    font-size: 11px;
+    font-weight: 700;
+    font-family: 'Arial', sans-serif;
+    padding: 4px 14px;
+    border-radius: 2px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: background .15s;
+    z-index: 10;
+  }
+  #pauseBtn:hover { background: var(--cp-orange); }
+
+  /* Pause overlay */
+  #pauseScreen {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 2px;
+    background: rgba(6,28,46,0.88);
+    border-left: 6px solid var(--cp-orange);
+  }
+  #pauseScreen h2 {
+    font-size: 32px; font-weight: 900;
+    color: var(--cp-white); margin-bottom: 6px;
+    text-transform: none; letter-spacing: 0;
+  }
+  #pauseScreen p {
+    font-size: 13px; color: var(--cp-light-blue); margin-bottom: 24px;
+  }
+
+  /* Footer */
+  .cp-footer {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    height: 28px;
+    background: rgba(14,87,137,0.95);
+    border-top: 1px solid rgba(248,106,27,0.3);
+    display: flex;
+    align-items: center;
+    padding: 0 14px;
+    z-index: 9999;
+    font-size: 9px;
+    font-family: 'Arial', sans-serif;
+  }
+  .cp-footer .brand { color: var(--cp-white); font-weight: 700; font-size: 10px; margin-right: 6px; }
+  .cp-footer .copy  { color: rgba(255,255,255,0.5); }
+  .cp-footer .cp-score-footer {
+    margin-left: auto;
+    color: var(--cp-orange);
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: 1px;
+  }
+</style>
+</head>
+<body>
+
+<div id=&quot;wrap&quot;>
+  <canvas id=&quot;c&quot; width=&quot;720&quot; height=&quot;540&quot;></canvas>
+  <div id=&quot;waveTag&quot; class=&quot;hidden&quot;></div>
+  <button id=&quot;pauseBtn&quot; class=&quot;hidden&quot;>⏸ Pause</button>
+
+  <!-- Pause Screen -->
+  <div class=&quot;hidden&quot; id=&quot;pauseScreen&quot;>
+    <div class=&quot;cp-eyebrow&quot;>Paused</div>
+    <h2>Charging Suspended</h2>
+    <p>EVs are waiting — get back out there.</p>
+    <button class=&quot;btn&quot; id=&quot;resumeBtn&quot;>Resume</button>
+  </div>
+
+  <!-- Start Screen -->
+  <div class=&quot;overlay&quot; id=&quot;startScreen&quot;>
+    <div class=&quot;cp-eyebrow&quot;>ChargePoint Presents</div>
+    <h1>CHARGE<span>BLASTER</span></h1>
+    <p class=&quot;cp-tagline&quot;>EVs need juice. You've got the power.<br>Don't let them leave uncharged.</p>
+    <button class=&quot;btn&quot; id=&quot;startBtn&quot;>Plug In &amp;amp; Play</button>
+
+    <div class=&quot;cp-instructions&quot;>
+      <strong>How to play:</strong><br>
+      Move mouse to aim &amp;nbsp;·&amp;nbsp; Click / hold to fire charge bolts<br>
+      Fill every EV's battery before it reaches you<br>
+      Survive waves to unlock bigger ChargePoint hardware
+    </div>
+
+    <div class=&quot;cp-upgrades&quot;>
+      <div class=&quot;cp-upgrade-card&quot;><div class=&quot;uc-name&quot;>Home Flex</div>Single bolt</div>
+      <div class=&quot;cp-upgrade-card&quot;><div class=&quot;uc-name&quot;>CT4000</div>Double shot</div>
+      <div class=&quot;cp-upgrade-card&quot;><div class=&quot;uc-name&quot;>Express+</div>Triple burst</div>
+      <div class=&quot;cp-upgrade-card&quot;><div class=&quot;uc-name&quot;>Fleet</div>5-way spread</div>
+    </div>
+  </div>
+
+  <!-- Game Over Screen -->
+  <div class=&quot;overlay hidden&quot; id=&quot;goScreen&quot;>
+    <div class=&quot;cp-eyebrow&quot;>Session ended</div>
+    <h2>Battery Depleted</h2>
+    <p class=&quot;go-sub&quot;>Too many uncharged EVs reached the station.</p>
+    <table class=&quot;cp-stats-table&quot; id=&quot;goStats&quot;></table>
+    <button class=&quot;btn&quot; id=&quot;restartBtn&quot;>Try Again</button>
+  </div>
+</div>
+
+<!-- Footer -->
+<div class=&quot;cp-footer&quot;>
+  <span class=&quot;brand&quot;>ChargePoint</span>
+  <span class=&quot;copy&quot;>© 2026 ChargePoint, Inc. | ChargeBlaster — Educational Game</span>
+  <span class=&quot;cp-score-footer&quot; id=&quot;footerScore&quot;></span>
+</div>
+
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+const W = 720, H = 540;
+
+// ── Brand palette (mirrored in JS for canvas drawing) ────────────────────────
+const CP = {
+  orange:     '#f86a1b',
+  darkBlue:   '#0e5789',
+  midBlue:    '#50a0d9',
+  steelBlue:  '#799cae',
+  lightBlue:  '#94d2e9',
+  yellow:     '#fbb315',
+  green:      '#6ba239',
+  red:        '#c91f16',
+  dark:       '#212121',
+  darkGray:   '#545454',
+  gray:       '#797a7d',
+  lightGray:  '#f2f2f2',
+  white:      '#ffffff',
+};
+
+// ── State ────────────────────────────────────────────────────────────────────
+let state = 'start';
+let mx = W/2, my = H/2;
+let frameN = 0, score = 0, wave = 1, lives = 3;
+let evs = [], bullets = [], particles = [], sparks = [];
+let shakeX = 0, shakeY = 0, shakeMag = 0;
+let waveTimer = 0, waveSpawnLeft = 0, waveSpawnInterval = 0;
+let waveLabel = '', waveLabelTimer = 0;
+let shootCooldown = 0;
+let upgradeLevel = 0;
+let chargedCount = 0;
+
+// Upgrades use CP brand colors
+const UPGRADES = [
+  { name:'Home Flex', color: CP.green,    shotColor:'#a5d6a7', multi:1, spread:1 },
+  { name:'CT4000',    color: CP.midBlue,  shotColor:'#b3d9f0', multi:2, spread:2 },
+  { name:'Express+',  color: CP.orange,   shotColor:'#fbc89a', multi:3, spread:3 },
+  { name:'Fleet',     color: CP.yellow,   shotColor:'#fde494', multi:5, spread:5 },
+];
+
+const EV_MODELS = [
+  { name:'Tesla Model 3',    emoji:'🚗', maxHp:3, speed:1.1, color: CP.midBlue,  reward:20 },
+  { name:'Chevy Bolt',       emoji:'🚙', maxHp:2, speed:1.4, color: CP.green,    reward:15 },
+  { name:'F-150 Lightning',  emoji:'🛻', maxHp:5, speed:0.7, color: CP.steelBlue,reward:35 },
+  { name:'Rivian R1T',       emoji:'🚐', maxHp:7, speed:0.5, color: CP.orange,   reward:50 },
+  { name:'Nissan Leaf',      emoji:'🚕', maxHp:1, speed:1.8, color: CP.yellow,   reward:10 },
+];
+
+const STATION = { x: 80, y: H/2, w: 50, h: 84 };
+
+// ── Input ─────────────────────────────────────────────────────────────────────
+canvas.addEventListener('mousemove', e => {
+  const r = canvas.getBoundingClientRect();
+  mx = e.clientX - r.left; my = e.clientY - r.top;
+});
+canvas.addEventListener('touchmove', e => {
+  e.preventDefault();
+  const r = canvas.getBoundingClientRect();
+  mx = e.touches[0].clientX - r.left; my = e.touches[0].clientY - r.top;
+}, { passive: false });
+
+// Auto-fire is always on — no hold needed
+let paused = false;
+
+document.getElementById('startBtn').onclick   = startGame;
+document.getElementById('restartBtn').onclick = startGame;
+
+const pauseBtn  = document.getElementById('pauseBtn');
+const pauseScr  = document.getElementById('pauseScreen');
+document.getElementById('resumeBtn').onclick  = resumeGame;
+
+pauseBtn.onclick = () => {
+  if (state !== 'playing') return;
+  paused = true;
+  state = 'paused';
+  pauseBtn.textContent = '▶ Resume';
+  pauseBtn.onclick = resumeGame;
+  pauseScr.classList.remove('hidden');
+};
+
+function resumeGame() {
+  if (state !== 'paused') return;
+  paused = false;
+  state = 'playing';
+  pauseBtn.textContent = '⏸ Pause';
+  pauseBtn.onclick = () => {
+    if (state !== 'playing') return;
+    paused = true; state = 'paused';
+    pauseBtn.textContent = '▶ Resume';
+    pauseBtn.onclick = resumeGame;
+    pauseScr.classList.remove('hidden');
+  };
+  pauseScr.classList.add('hidden');
+  loop();
+}
+
+// Keyboard shortcut: Escape or P to pause/resume
+document.addEventListener('keydown', e => {
+  if (e.code === 'Escape' || e.code === 'KeyP') {
+    if (state === 'playing') pauseBtn.onclick();
+    else if (state === 'paused') resumeGame();
+  }
+});
+
+// ── Game init ─────────────────────────────────────────────────────────────────
+function startGame() {
+  document.getElementById('startScreen').classList.add('hidden');
+  document.getElementById('goScreen').classList.add('hidden');
+  evs = []; bullets = []; particles = []; sparks = [];
+  score = 0; lives = 3; wave = 1; frameN = 0;
+  chargedCount = 0; upgradeLevel = 0; shakeMag = 0;
+  paused = false;
+  state = 'playing';
+  pauseBtn.textContent = '⏸ Pause';
+  pauseBtn.classList.remove('hidden');
+  pauseScr.classList.add('hidden');
+  startWave(1);
+  loop();
+}
+
+function startWave(w) {
+  wave = w;
+  waveLabel = `Wave ${w}`;
+  waveLabelTimer = 130;
+  document.getElementById('waveTag').textContent = `Wave ${w}`;
+  document.getElementById('waveTag').classList.remove('hidden');
+  waveSpawnLeft = 6 + w * 3;
+  waveSpawnInterval = Math.max(28, 80 - w * 5);
+  waveTimer = waveSpawnInterval;
+  upgradeLevel = Math.min(3, Math.floor((w - 1) / 3));
+}
+
+// ── Spawning ──────────────────────────────────────────────────────────────────
+function spawnEV() {
+  const model = EV_MODELS[Math.floor(Math.random() * EV_MODELS.length)];
+  const lane  = 60 + Math.random() * (H - 120);
+  const hp    = model.maxHp + Math.floor(wave / 3);
+  evs.push({
+    x: W + 40, y: lane,
+    w: 54, h: 30,
+    hp, maxHp: hp,
+    speed: model.speed * (1 + wave * 0.05),
+    model,
+    charged: 0,
+    full: false,
+    hitFlash: 0,
+    exitTimer: 0,
+  });
+}
+
+// ── Shooting ──────────────────────────────────────────────────────────────────
+function shoot() {
+  if (shootCooldown > 0) return;
+  const up = UPGRADES[upgradeLevel];
+  const ox = STATION.x + STATION.w / 2;
+  const oy = STATION.y;
+  const dx = mx - ox, dy = my - oy;
+  const baseAngle = Math.atan2(dy, dx);
+  const spread = (up.spread - 1) * 0.18;
+  for (let i = 0; i < up.multi; i++) {
+    let angle = baseAngle;
+    if (up.multi > 1) angle = baseAngle - spread/2 + (spread / (up.multi-1)) * i;
+    bullets.push({ x:ox, y:oy, vx:Math.cos(angle)*9, vy:Math.sin(angle)*9,
+                   color:up.shotColor, life:80, r:5 });
+  }
+  spawnParticles(ox, oy, up.shotColor, 4, 2);
+  shootCooldown = Math.max(5, 14 - wave);
+}
+
+// ── Particles / Sparks ────────────────────────────────────────────────────────
+function spawnParticles(x, y, color, n, spd) {
+  for (let i = 0; i < n; i++) {
+    const a = Math.random() * Math.PI * 2;
+    const s = spd * (0.5 + Math.random());
+    particles.push({ x, y, vx:Math.cos(a)*s, vy:Math.sin(a)*s, life:30+Math.random()*20, color, r:2+Math.random()*3 });
+  }
+}
+function spawnSpark(x, y) {
+  for (let i = 0; i < 5; i++) {
+    const a = Math.random() * Math.PI * 2;
+    sparks.push({ x, y, vx:Math.cos(a)*(1+Math.random()*3), vy:Math.sin(a)*(1+Math.random()*3), life:18+Math.random()*14 });
+  }
+}
+function screenShake(mag) { shakeMag = Math.max(shakeMag, mag); }
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+function lerpColor(a, b, t) {
+  const ah = a.replace('#',''), bh = b.replace('#','');
+  const ar=parseInt(ah.slice(0,2),16), ag=parseInt(ah.slice(2,4),16), ab=parseInt(ah.slice(4,6),16);
+  const br=parseInt(bh.slice(0,2),16), bg=parseInt(bh.slice(2,4),16), bb=parseInt(bh.slice(4,6),16);
+  return `rgb(${Math.round(ar+(br-ar)*t)},${Math.round(ag+(bg-ag)*t)},${Math.round(ab+(bb-ab)*t)})`;
+}
+
+// ── Draw background ───────────────────────────────────────────────────────────
+function drawBg() {
+  // Dark blue gradient — CP dark-blue family
+  const grad = ctx.createLinearGradient(0, 0, W, H);
+  grad.addColorStop(0, '#092e4a');
+  grad.addColorStop(1, '#061c2e');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, W, H);
+
+  // Subtle grid — CP steel-blue tint
+  ctx.strokeStyle = 'rgba(121,156,174,0.08)';
+  ctx.lineWidth = 1;
+  for (let x = 0; x < W; x += 50) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); }
+  for (let y = 0; y < H; y += 50) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
+
+  // Scanlines
+  for (let y = 0; y < H; y += 4) {
+    ctx.fillStyle = 'rgba(0,0,0,0.06)';
+    ctx.fillRect(0, y, W, 2);
+  }
+
+  // Orange left accent bar (5px) matching CP title slide style
+  ctx.fillStyle = CP.orange;
+  ctx.fillRect(0, 0, 4, H);
+}
+
+// ── Draw station ──────────────────────────────────────────────────────────────
+function drawStation() {
+  const up = UPGRADES[upgradeLevel];
+  const sx = STATION.x - STATION.w/2;
+  const sy = STATION.y - STATION.h/2;
+
+  // Glow halo using upgrade color
+  const glow = ctx.createRadialGradient(STATION.x, STATION.y, 4, STATION.x, STATION.y, 72);
+  glow.addColorStop(0, up.color + '33');
+  glow.addColorStop(1, 'transparent');
+  ctx.fillStyle = glow;
+  ctx.fillRect(STATION.x-80, STATION.y-80, 160, 160);
+
+  // Body — CP dark body with border-top in orange (card style)
+  ctx.fillStyle = '#0e2d42';
+  ctx.beginPath(); ctx.roundRect(sx, sy, STATION.w, STATION.h, 2); ctx.fill();
+
+  // Border-top orange (card accent)
+  ctx.fillStyle = CP.orange;
+  ctx.fillRect(sx, sy, STATION.w, 3);
+
+  // Left color stripe (upgrade color)
+  ctx.fillStyle = up.color;
+  ctx.fillRect(sx, sy+3, 4, STATION.h-3);
+
+  // Screen
+  ctx.fillStyle = '#051015';
+  ctx.fillRect(sx+8, sy+10, STATION.w-12, 28);
+
+  // Screen text — &quot;ChargePoint&quot; in orange, product name in white
+  ctx.font = 'bold 7px Arial';
+  ctx.textAlign = 'center';
+  ctx.fillStyle = CP.orange;
+  ctx.fillText('ChargePoint', STATION.x+2, sy+21);
+  ctx.font = '6px Arial';
+  ctx.fillStyle = CP.lightBlue;
+  ctx.fillText(up.name, STATION.x+2, sy+31);
+
+  // Plug
+  ctx.font = '17px serif';
+  ctx.fillText('🔌', STATION.x+2, sy+62);
+
+  // Aim beam — dashed, upgrade color
+  const dx = mx-STATION.x, dy = my-STATION.y;
+  const dist = Math.sqrt(dx*dx+dy*dy)||1;
+  ctx.strokeStyle = up.color + '28';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([5, 12]);
+  ctx.beginPath();
+  ctx.moveTo(STATION.x, STATION.y);
+  ctx.lineTo(STATION.x + (dx/dist)*W, STATION.y + (dy/dist)*W);
+  ctx.stroke();
+  ctx.setLineDash([]);
+}
+
+// ── Draw EV ───────────────────────────────────────────────────────────────────
+function drawEV(ev) {
+  const pct = ev.charged / ev.maxHp;
+
+  // Hit flash
+  if (ev.hitFlash > 0) {
+    ctx.fillStyle = `rgba(248,106,27,${ev.hitFlash/12})`;
+    ctx.beginPath();
+    ctx.roundRect(ev.x-ev.w/2-4, ev.y-ev.h/2-4, ev.w+8, ev.h+8, 4);
+    ctx.fill();
+  }
+
+  ctx.save();
+  ctx.translate(ev.x, ev.y);
+  ctx.rotate(Math.sin(frameN*0.08+ev.y)*0.022);
+
+  // Body — grey when empty, shifts to CP brand blue when charged
+  ctx.fillStyle = lerpColor('#2a3a4a', ev.model.color, pct);
+  ctx.beginPath(); ctx.roundRect(-ev.w/2, -ev.h/2, ev.w, ev.h, 4); ctx.fill();
+
+  // Glow when nearly full
+  if (pct > 0.5) {
+    ctx.shadowBlur = 14 * pct;
+    ctx.shadowColor = CP.orange;
+  }
+
+  // Roof
+  ctx.fillStyle = lerpColor('#1a2530', '#cce8f4', pct * 0.5);
+  ctx.fillRect(-ev.w/2+8, -ev.h/2, ev.w-18, ev.h/2);
+  ctx.shadowBlur = 0;
+
+  // Emoji
+  ctx.font = '15px serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(ev.model.emoji, 0, 6);
+
+  ctx.restore();
+
+  // Battery bar — CP color scheme: red → yellow → green
+  const bw = ev.w+10, bx = ev.x-bw/2, by = ev.y-ev.h/2-15;
+  ctx.fillStyle = 'rgba(0,0,0,0.55)';
+  ctx.fillRect(bx, by, bw, 9);
+  ctx.fillStyle = pct < 0.4 ? CP.red : pct < 0.7 ? CP.yellow : CP.green;
+  ctx.fillRect(bx, by, bw*pct, 9);
+  ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+  ctx.lineWidth = 1;
+  ctx.strokeRect(bx, by, bw, 9);
+
+  // EV name
+  ctx.fillStyle = 'rgba(148,210,233,0.6)';
+  ctx.font = '8px Arial';
+  ctx.textAlign = 'center';
+  ctx.fillText(ev.model.name, ev.x, by-2);
+
+  // Fully charged badge
+  if (ev.full) {
+    ctx.font = '13px serif';
+    ctx.fillText('✅', ev.x, ev.y - ev.h/2 - 24);
+  }
+}
+
+// ── Draw bullet ───────────────────────────────────────────────────────────────
+function drawBullet(b) {
+  ctx.save();
+  ctx.shadowBlur = 14;
+  ctx.shadowColor = b.color;
+  ctx.fillStyle = b.color;
+  ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, Math.PI*2); ctx.fill();
+  ctx.globalAlpha = 0.3;
+  ctx.beginPath(); ctx.arc(b.x-b.vx*1.5, b.y-b.vy*1.5, b.r*0.7, 0, Math.PI*2); ctx.fill();
+  ctx.restore();
+}
+
+// ── Draw particles / sparks ───────────────────────────────────────────────────
+function drawParticles() {
+  for (const p of particles) {
+    ctx.globalAlpha = p.life / 50;
+    ctx.fillStyle = p.color;
+    ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+}
+function drawSparks() {
+  for (const s of sparks) {
+    ctx.globalAlpha = s.life / 32;
+    ctx.strokeStyle = CP.yellow;
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(s.x, s.y);
+    ctx.lineTo(s.x+s.vx*4, s.y+s.vy*4);
+    ctx.stroke();
+  }
+  ctx.globalAlpha = 1;
+}
+
+// ── HUD ───────────────────────────────────────────────────────────────────────
+function drawHUD() {
+  const up = UPGRADES[upgradeLevel];
+
+  // Top bar background
+  ctx.fillStyle = 'rgba(6,28,46,0.85)';
+  ctx.fillRect(0, 0, W, 34);
+  // Orange underline on top bar
+  ctx.fillStyle = CP.orange;
+  ctx.fillRect(0, 34, W, 2);
+
+  // Lives (orange bolts)
+  ctx.textAlign = 'left';
+  ctx.font = 'bold 13px Arial';
+  ctx.fillStyle = CP.lightBlue;
+  ctx.fillText('LIVES', 14, 22);
+  ctx.font = '14px serif';
+  for (let i = 0; i < 3; i++) {
+    ctx.fillText(i < lives ? '⚡' : '○', 58 + i*18, 22);
+  }
+
+  // Charger label — callout style
+  ctx.fillStyle = up.color;
+  ctx.font = 'bold 11px Arial';
+  ctx.textAlign = 'left';
+  ctx.fillText(`▶ ${up.name}`, 120, 22);
+
+  // Score — right aligned, orange value
+  ctx.textAlign = 'right';
+  ctx.fillStyle = CP.steelBlue;
+  ctx.font = 'bold 11px Arial';
+  ctx.fillText('SCORE', W - 80, 22);
+  ctx.fillStyle = CP.orange;
+  ctx.font = 'bold 14px Arial';
+  ctx.fillText(score, W - 14, 22);
+
+  // Update footer score badge
+  document.getElementById('footerScore').textContent = `Score: ${score}`;
+
+  // Bottom strip
+  ctx.fillStyle = 'rgba(6,28,46,0.75)';
+  ctx.fillRect(0, H-26, W, 26);
+
+  // Charged counter (green, like CP green = positive/success)
+  ctx.fillStyle = CP.green;
+  ctx.font = 'bold 11px Arial';
+  ctx.textAlign = 'left';
+  ctx.fillText(`✅ ${chargedCount} EVs Charged`, 14, H-10);
+
+  // Wave
+  ctx.fillStyle = CP.steelBlue;
+  ctx.textAlign = 'right';
+  ctx.fillText(`Wave ${wave}`, W-14, H-10);
+
+  // Wave label banner — big, centered, fades out
+  if (waveLabelTimer > 0) {
+    ctx.globalAlpha = Math.min(1, waveLabelTimer / 30);
+    ctx.shadowBlur = 24;
+    ctx.shadowColor = CP.orange;
+    ctx.fillStyle = CP.white;
+    ctx.font = 'bold 34px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText(waveLabel, W/2, H/2 - 70);
+    // Orange rule under wave label (h2::after style)
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = CP.orange;
+    ctx.fillRect(W/2 - 40, H/2 - 60, 80, 3);
+    ctx.globalAlpha = 1;
+  }
+}
+
+// ── Update ────────────────────────────────────────────────────────────────────
+function update() {
+  frameN++;
+  if (shootCooldown > 0) shootCooldown--;
+  shoot(); // always auto-fire toward cursor
+
+  // Screen shake
+  if (shakeMag > 0) {
+    shakeX = (Math.random()-.5)*shakeMag*2;
+    shakeY = (Math.random()-.5)*shakeMag*2;
+    shakeMag *= 0.84;
+    if (shakeMag < 0.3) shakeMag = 0;
+  } else { shakeX = 0; shakeY = 0; }
+
+  // Spawn wave
+  if (waveSpawnLeft > 0) {
+    waveTimer--;
+    if (waveTimer <= 0) { spawnEV(); waveSpawnLeft--; waveTimer = waveSpawnInterval; }
+  }
+
+  // Next wave
+  if (waveSpawnLeft === 0 &amp;&amp; evs.length === 0) {
+    wave++;
+    startWave(wave);
+    const newUp = Math.min(3, Math.floor((wave-1)/3));
+    if (newUp > upgradeLevel) {
+      waveLabel = `Upgraded: ${UPGRADES[newUp].name}`;
+      spawnParticles(STATION.x, STATION.y, UPGRADES[newUp].color, 30, 5);
+    }
+    upgradeLevel = newUp;
+  }
+
+  // Update bullets
+  for (let i = bullets.length-1; i >= 0; i--) {
+    const b = bullets[i];
+    b.x += b.vx; b.y += b.vy; b.life--;
+    if (b.life <= 0 || b.x > W || b.x < 0 || b.y < 0 || b.y > H) { bullets.splice(i,1); continue; }
+    for (const ev of evs) {
+      if (ev.full) continue;
+      if (Math.abs(b.x-ev.x) < ev.w/2+4 &amp;&amp; Math.abs(b.y-ev.y) < ev.h/2+4) {
+        ev.charged++;
+        ev.hitFlash = 8;
+        spawnParticles(b.x, b.y, UPGRADES[upgradeLevel].shotColor, 5, 3);
+        bullets.splice(i,1);
+        if (ev.charged >= ev.maxHp) {
+          ev.full = true;
+          chargedCount++;
+          score += ev.model.reward * wave;
+          screenShake(4);
+          spawnParticles(ev.x, ev.y, CP.orange, 22, 5);
+          ev.exitTimer = 60;
+        }
+        break;
+      }
+    }
+  }
+
+  // Update EVs
+  for (let i = evs.length-1; i >= 0; i--) {
+    const ev = evs[i];
+    if (ev.hitFlash > 0) ev.hitFlash--;
+    if (ev.charged > 0 &amp;&amp; !ev.full &amp;&amp; frameN % 8 === 0) spawnSpark(ev.x, ev.y);
+
+    if (ev.full) {
+      ev.exitTimer--;
+      ev.x -= ev.speed * 2;
+      ev.y -= 1;
+      if (ev.exitTimer <= 0 || ev.x < -60) evs.splice(i,1);
+      continue;
+    }
+
+    ev.x -= ev.speed;
+    if (ev.x < STATION.x + STATION.w/2 + 10) {
+      lives--;
+      screenShake(10);
+      spawnParticles(ev.x, ev.y, CP.red, 20, 6);
+      evs.splice(i,1);
+      if (lives <= 0) { gameOver(); return; }
+    }
+  }
+
+  // Update particles
+  for (let i = particles.length-1; i>=0; i--) {
+    const p = particles[i];
+    p.x+=p.vx; p.y+=p.vy; p.vy+=0.1; p.life--;
+    if (p.life<=0) particles.splice(i,1);
+  }
+  // Update sparks
+  for (let i = sparks.length-1; i>=0; i--) {
+    const s = sparks[i];
+    s.x+=s.vx; s.y+=s.vy; s.life--;
+    if (s.life<=0) sparks.splice(i,1);
+  }
+  if (waveLabelTimer>0) waveLabelTimer--;
+}
+
+// ── Game over ─────────────────────────────────────────────────────────────────
+function gameOver() {
+  state = 'gameover';
+  pauseBtn.classList.add('hidden');
+  document.getElementById('goStats').innerHTML = `
+    <tr><td>Final Score</td><td><strong>${score}</strong></td></tr>
+    <tr><td>EVs Charged</td><td><strong>${chargedCount}</strong></td></tr>
+    <tr><td>Waves Survived</td><td><strong>${wave}</strong></td></tr>
+    <tr><td>Best Charger</td><td><strong>${UPGRADES[upgradeLevel].name}</strong></td></tr>
+  `;
+  document.getElementById('goScreen').classList.remove('hidden');
+}
+
+// ── Main loop ─────────────────────────────────────────────────────────────────
+function loop() {
+  if (state !== 'playing') return;
+  requestAnimationFrame(loop);
+  if (paused) return;
+  update();
+  ctx.save();
+  ctx.translate(shakeX, shakeY);
+  drawBg();
+  drawStation();
+  for (const ev of evs) drawEV(ev);
+  for (const b of bullets) drawBullet(b);
+  drawSparks();
+  drawParticles();
+  drawHUD();
+  ctx.restore();
+}
+
+// ── Initial canvas preview ────────────────────────────────────────────────────
+(function preview() {
+  const grad = ctx.createLinearGradient(0,0,W,H);
+  grad.addColorStop(0,'#092e4a'); grad.addColorStop(1,'#061c2e');
+  ctx.fillStyle = grad; ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle='rgba(121,156,174,0.08)'; ctx.lineWidth=1;
+  for(let x=0;x<W;x+=50){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+  for(let y=0;y<H;y+=50){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+  ctx.fillStyle='#f86a1b'; ctx.fillRect(0,0,4,H);
+})();
+</script>
+</body>
+</html>
+" style="width:100%;height:540px;border:none;display:block;"></iframe>
   </div>
 
   <div class="label">Engineering_Tools</div>
@@ -127,10 +1031,1083 @@ h1 { font-size: 1.4rem; font-weight: 300; letter-spacing: 0.4rem; text-transform
       <span>05. dc_module_viewer.exe</span>
       <a href="dc-module-viewer.html" target="_blank">Open &#8599;</a>
     </div>
-    <iframe class="preview-window game-preview" src="dc-module-viewer.html" loading="lazy"></iframe>
+    <iframe srcdoc="<!DOCTYPE html>
+<html lang=&quot;en&quot;>
+<head>
+<meta charset=&quot;UTF-8&quot;>
+<meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;>
+<title>VX-9000 Power Switch Assembly | Interactive Component Viewer</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --cp-orange:#f86a1b;--cp-blue:#0e5789;--cp-dark:#111114;
+  --panel:#15151a;--border:#222228;--text:#e8e8f0;--muted:#6b6b7e;
+}
+html,body{height:100vh;overflow:hidden;background:var(--cp-dark);
+  font-family:'Arial',Helvetica,sans-serif;color:var(--text);}
+
+/* TOP BAR */
+#topbar{height:44px;background:#0a0f1e;display:flex;align-items:center;
+  padding:0 18px;gap:10px;border-bottom:3px solid var(--cp-orange);
+  position:relative;z-index:30;flex-shrink:0;white-space:nowrap;overflow:hidden;}
+.tb-brand{color:var(--cp-orange);font-weight:700;font-size:14px;letter-spacing:-0.01em;}
+.tb-sep{color:#333;}
+.tb-pn{color:#666;font-size:11px;font-family:monospace;}
+.tb-name{color:#ccc;font-size:12px;font-weight:600;}
+.tb-hint{margin-left:auto;font-size:10px;color:#444;
+  display:flex;gap:16px;}
+.tb-hint span{display:flex;align-items:center;gap:4px;}
+.kbd{background:#1e1e28;border:1px solid #333;border-radius:3px;
+  padding:1px 5px;font-size:9px;font-family:monospace;color:#aaa;}
+
+/* LAYOUT */
+#app{display:flex;height:calc(100vh - 44px);}
+
+/* LEFT SIDEBAR — parts tree */
+#sidebar{display:none;}
+#sb-header{display:none;}
+
+
+#parts-tree{display:none;}
+
+
+
+
+
+
+
+
+
+
+/* CANVAS */
+#canvas-wrap{flex:1;position:relative;overflow:hidden;}
+canvas{display:block;width:100%!important;height:100%!important;}
+
+/* CONTROLS */
+#ctrl-bar{position:absolute;top:10px;left:10px;display:flex;gap:6px;z-index:10;}
+.cb{background:rgba(10,10,20,.75);border:1px solid #2a2a38;color:#aaa;
+  font-size:10px;padding:5px 12px;border-radius:2px;cursor:pointer;
+  font-family:'Arial',sans-serif;backdrop-filter:blur(4px);transition:all .12s;}
+.cb:hover{background:rgba(248,106,27,.15);border-color:rgba(248,106,27,.5);color:#fff;}
+.cb.active{background:rgba(248,106,27,.2);border-color:var(--cp-orange);color:var(--cp-orange);}
+
+/* EXPLODE WRAP */
+#explode-wrap{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);
+  display:flex;align-items:center;gap:10px;z-index:10;
+  background:rgba(10,10,20,.8);border:1px solid var(--border);
+  padding:6px 16px;border-radius:20px;backdrop-filter:blur(6px);}
+#explode-wrap label{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;}
+#explode-slider{width:120px;accent-color:var(--cp-orange);cursor:pointer;}
+#explode-val{font-size:9px;color:var(--muted);width:26px;text-align:right;font-family:monospace;}
+
+/* SECTION LABELS (3D callout lines rendered in 2D overlay) */
+#label-canvas{position:absolute;inset:0;pointer-events:none;z-index:5;}
+
+/* RIGHT PANEL — detail + photos */
+#detail-panel{width:280px;background:var(--panel);border-left:1px solid var(--border);
+  display:flex;flex-direction:column;overflow:hidden;flex-shrink:0;}
+#dp-top{padding:14px 14px 10px;border-bottom:1px solid var(--border);}
+#dp-pn{font-size:9px;color:var(--cp-orange);font-family:monospace;letter-spacing:.06em;margin-bottom:3px;}
+#dp-name{font-size:13px;font-weight:700;color:#fff;line-height:1.25;margin-bottom:6px;}
+#dp-desc{font-size:10.5px;color:rgba(255,255,255,.65);line-height:1.6;}
+#dp-meta{display:grid;grid-template-columns:1fr 1fr;gap:6px;
+  padding:10px 14px;border-bottom:1px solid var(--border);}
+.m-cell .m-label{font-size:8px;color:#444;text-transform:uppercase;letter-spacing:.08em;}
+.m-cell .m-val{font-size:10px;color:#ccc;font-weight:600;margin-top:2px;}
+#dp-photos{flex:1;overflow-y:auto;padding:10px 14px;}
+#dp-photos h4{font-size:8px;text-transform:uppercase;letter-spacing:.12em;
+  color:var(--muted);margin-bottom:8px;}
+#dp-photos img{width:100%;border-radius:2px;border:1px solid #222;
+  margin-bottom:6px;cursor:zoom-in;transition:opacity .12s;}
+#dp-photos img:hover{opacity:.85;}
+#dp-empty{padding:24px 14px;font-size:10px;color:#333;text-align:center;line-height:1.7;}
+
+/* LIGHTBOX */
+#lb{display:none;position:fixed;inset:0;z-index:99999;
+  background:rgba(0,0,0,.94);justify-content:center;align-items:center;cursor:zoom-out;}
+#lb.on{display:flex;}
+#lb img{max-width:95vw;max-height:95vh;object-fit:contain;border-radius:3px;}
+
+/* TOOLTIP */
+#tooltip{position:absolute;pointer-events:none;z-index:20;display:none;
+  background:rgba(10,10,20,.9);border:1px solid rgba(248,106,27,.5);
+  border-left:3px solid var(--cp-orange);padding:5px 10px;border-radius:2px;
+  font-size:10px;color:#fff;backdrop-filter:blur(4px);white-space:nowrap;}
+</style>
+</head>
+<body>
+
+<div id=&quot;topbar&quot;>
+  <span class=&quot;tb-brand&quot;>Voltara</span>
+  <span class=&quot;tb-sep&quot;>|</span>
+  <span class=&quot;tb-pn&quot;>VX-9000-DC</span>
+  <span class=&quot;tb-sep&quot;>·</span>
+  <span class=&quot;tb-name&quot;>VX-9000 | Power Switch Assembly</span>
+  <div class=&quot;tb-hint&quot;>
+    <span><span class=&quot;kbd&quot;>Drag</span> Orbit</span>
+    <span><span class=&quot;kbd&quot;>Scroll</span> Zoom</span>
+    <span><span class=&quot;kbd&quot;>Click</span> Select</span>
+    <span><span class=&quot;kbd&quot;>X</span> Explode</span>
+    <span><span class=&quot;kbd&quot;>R</span> Reset</span>
+    <span><span class=&quot;kbd&quot;>H</span> Toggle housing</span>
+  </div>
+</div>
+
+<div id=&quot;app&quot;>
+  <!-- LEFT SIDEBAR -->
+  <div id=&quot;sidebar&quot;>
+    <div id=&quot;sb-header&quot;>
+      <h3>Assembly Tree</h3>
+      <p>VX-9000-DC · 19 assembly steps</p>
+    </div>
+    <div id=&quot;parts-tree&quot;></div>
   </div>
 
-  <div class="label">Art_Sketches</div>
+  <!-- CANVAS AREA -->
+  <div id=&quot;canvas-wrap&quot;>
+    <canvas id=&quot;c&quot;></canvas>
+    <canvas id=&quot;label-canvas&quot;></canvas>
+    <div id=&quot;ctrl-bar&quot;>
+      <button class=&quot;cb active&quot; id=&quot;btn-asm&quot;>Assembled</button>
+      <button class=&quot;cb&quot; id=&quot;btn-exp&quot;>Exploded</button>
+      <button class=&quot;cb&quot; id=&quot;btn-xray&quot;>X-Ray</button>
+      <button class=&quot;cb&quot; id=&quot;btn-reset&quot;>⟳ Reset</button>
+    </div>
+    <div id=&quot;explode-wrap&quot;>
+      <label>Explode</label>
+      <input type=&quot;range&quot; id=&quot;explode-slider&quot; min=&quot;0&quot; max=&quot;100&quot; value=&quot;0&quot;>
+      <span id=&quot;explode-val&quot;>0%</span>
+    </div>
+    <div id=&quot;tooltip&quot;></div>
+  </div>
+
+  <!-- RIGHT DETAIL PANEL -->
+  <div id=&quot;detail-panel&quot;>
+    <div id=&quot;dp-top&quot;>
+      <div id=&quot;dp-pn&quot;>—</div>
+      <div id=&quot;dp-name&quot;>Select a component</div>
+      <div id=&quot;dp-desc&quot; style=&quot;color:#333&quot;>Click any part in the 3D view or the assembly tree to inspect it.</div>
+    </div>
+    <div id=&quot;dp-meta&quot;>
+      <div class=&quot;m-cell&quot;><div class=&quot;m-label&quot;>Torque</div><div class=&quot;m-val&quot; id=&quot;dp-torque&quot;>—</div></div>
+      <div class=&quot;m-cell&quot;><div class=&quot;m-label&quot;>Fastener</div><div class=&quot;m-val&quot; id=&quot;dp-fastener&quot;>—</div></div>
+      <div class=&quot;m-cell&quot;><div class=&quot;m-label&quot;>Material</div><div class=&quot;m-val&quot; id=&quot;dp-material&quot;>—</div></div>
+      <div class=&quot;m-cell&quot;><div class=&quot;m-label&quot;>Step</div><div class=&quot;m-val&quot; id=&quot;dp-step&quot;>—</div></div>
+    </div>
+    <div id=&quot;dp-photos&quot; style=&quot;display:none&quot;>
+      <div id=&quot;dp-empty&quot;>← Select a part to see<br>reference photos &amp;amp; specs</div>
+    </div>
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div id=&quot;lb&quot;><img id=&quot;lb-img&quot; src=&quot;&quot; alt=&quot;&quot;></div>
+
+<script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js&quot;></script>
+<!-- IMAGE DATA INJECTED BELOW -->
+<script>
+const IMG_REMOVED = null;
+</script>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════
+//  PROTON PART DEFINITIONS
+//  Each part has: id, group, pn, name, desc, torque, fastener,
+//  material, step, photos[], color, roughness, metalness,
+//  meshFn (function returning THREE.BufferGeometry or Group),
+//  pos [x,y,z], rot [rx,ry,rz], explodeDir [dx,dy,dz]
+// ═══════════════════════════════════════════════════════════════════
+
+// ── Helper geometry builders ──────────────────────────────────────
+function box(w,h,d){return new THREE.BoxGeometry(w,h,d,1,1,1);}
+function cyl(rt,rb,h,seg){return new THREE.CylinderGeometry(rt,rb,h,seg||24);}
+function ringSolid(ri,ro,h,seg){ // flat washer/busbar with hole
+  const shape = new THREE.Shape();
+  shape.absarc(0,0,ro,0,Math.PI*2,false);
+  const hole = new THREE.Path();
+  hole.absarc(0,0,ri,0,Math.PI*2,true);
+  shape.holes.push(hole);
+  return new THREE.ExtrudeGeometry(shape,{depth:h,bevelEnabled:false});
+}
+function roundedBox(w,h,d,r,seg){
+  // Approximate with scaled sphere for endcaps + box body
+  const g = new THREE.BoxGeometry(w,h,d,2,2,2);
+  return g;
+}
+
+// PCB board with component bumps
+function buildPCBA(){
+  const group = new THREE.Group();
+  // FR4 substrate
+  const board = new THREE.Mesh(
+    new THREE.BoxGeometry(0.178,0.003,0.098),
+    new THREE.MeshStandardMaterial({color:0x1a5c2a,roughness:0.5,metalness:0.1})
+  );
+  group.add(board);
+  // Copper traces (thin overlay)
+  const trace = new THREE.Mesh(
+    new THREE.BoxGeometry(0.176,0.0002,0.096),
+    new THREE.MeshStandardMaterial({color:0xb87333,roughness:0.3,metalness:0.9,transparent:true,opacity:0.6})
+  );
+  trace.position.y = 0.0016;
+  group.add(trace);
+  // Big electrolytic caps (x4)
+  [[-.06,.04],[-.06,-.04],[-.02,.04],[-.02,-.04]].forEach(([x,z])=>{
+    const cap = new THREE.Mesh(cyl(.008,.008,.022,16),
+      new THREE.MeshStandardMaterial({color:0x2244aa,roughness:0.4,metalness:0.3}));
+    cap.position.set(x,.013,z); group.add(cap);
+  });
+  // MOSFETs / driver ICs (flat black packages)
+  [[.05,.02],[.05,-.02],[.07,.02],[.07,-.02],[.03,.02]].forEach(([x,z])=>{
+    const ic = new THREE.Mesh(new THREE.BoxGeometry(.012,.004,.009),
+      new THREE.MeshStandardMaterial({color:0x111111,roughness:0.8,metalness:0.1}));
+    ic.position.set(x,.0035,z); group.add(ic);
+  });
+  // CAN transceiver (small IC)
+  const can = new THREE.Mesh(new THREE.BoxGeometry(.009,.003,.006),
+    new THREE.MeshStandardMaterial({color:0x222222,roughness:0.7}));
+  can.position.set(-.04,.003,.02); group.add(can);
+  // Connector headers (x3)
+  [[-0.07,-.03],[-.07,.01],[-.07,.03]].forEach(([x,z])=>{
+    const conn = new THREE.Mesh(new THREE.BoxGeometry(.016,.008,.012),
+      new THREE.MeshStandardMaterial({color:0x1a1a1a,roughness:0.9}));
+    conn.position.set(x,.007,z); group.add(conn);
+    // Pins
+    for(let i=0;i<4;i++){
+      const pin = new THREE.Mesh(cyl(.0005,.0005,.006,6),
+        new THREE.MeshStandardMaterial({color:0xddaa00,metalness:1,roughness:0.1}));
+      pin.position.set(x-.004+i*.003,.001,z); group.add(pin);
+    }
+  });
+  // Mounting standoffs (4 corners)
+  [[-0.082,-.044],[-.082,.044],[.082,-.044],[.082,.044]].forEach(([x,z])=>{
+    const s = new THREE.Mesh(cyl(.003,.003,.006,8),
+      new THREE.MeshStandardMaterial({color:0x888888,metalness:0.9,roughness:0.2}));
+    s.position.set(x,-.004,z); group.add(s);
+  });
+  return group;
+}
+
+// Orbis contactor — realistic relay body
+function buildContactor(label){
+  const group = new THREE.Group();
+  // Main body — black polymer housing
+  const body = new THREE.Mesh(
+    new THREE.BoxGeometry(.072,.092,.062),
+    new THREE.MeshStandardMaterial({color:0x1a1a1a,roughness:0.7,metalness:0.05})
+  );
+  group.add(body);
+  // Arc suppression top dome
+  const dome = new THREE.Mesh(cyl(.028,.030,.018,20),
+    new THREE.MeshStandardMaterial({color:0x2a2a2a,roughness:0.8}));
+  dome.position.y = .055; group.add(dome);
+  // Coil terminals (small brass posts, bottom)
+  [-.015,.015].forEach(x=>{
+    const t = new THREE.Mesh(cyl(.004,.004,.018,8),
+      new THREE.MeshStandardMaterial({color:0xb87333,metalness:0.9,roughness:0.2}));
+    t.position.set(x,-.055,0); group.add(t);
+  });
+  // HV terminals (large copper studs, top)
+  [-.018,.018].forEach(x=>{
+    const stud = new THREE.Mesh(cyl(.006,.006,.025,10),
+      new THREE.MeshStandardMaterial({color:0xc8943a,metalness:1,roughness:0.15}));
+    stud.position.set(x,.058,0); group.add(stud);
+    // M10 hex nut
+    const nut = new THREE.Mesh(cyl(.007,.007,.006,6),
+      new THREE.MeshStandardMaterial({color:0xaaaaaa,metalness:0.9,roughness:0.2}));
+    nut.position.set(x,.074,0); group.add(nut);
+  });
+  // Label emboss
+  const lbl = new THREE.Mesh(new THREE.BoxGeometry(.04,.012,.001),
+    new THREE.MeshStandardMaterial({color:0xffffff,roughness:1}));
+  lbl.position.set(0,-.01,.032); group.add(lbl);
+  return group;
+}
+
+// Sensis fluxgate sensor — toroidal sense aperture
+function buildSensis(){
+  const group = new THREE.Group();
+  // Housing body
+  const body = new THREE.Mesh(new THREE.BoxGeometry(.052,.028,.042),
+    new THREE.MeshStandardMaterial({color:0xcc4400,roughness:0.5,metalness:0.2}));
+  group.add(body);
+  // Aperture hole (represented as dark torus)
+  const aperture = new THREE.Mesh(
+    new THREE.TorusGeometry(.01,.005,8,20),
+    new THREE.MeshStandardMaterial({color:0x111111,roughness:0.9}));
+  aperture.rotation.x = Math.PI/2;
+  aperture.position.set(0,0,0); group.add(aperture);
+  // Connector block
+  const conn = new THREE.Mesh(new THREE.BoxGeometry(.022,.016,.010),
+    new THREE.MeshStandardMaterial({color:0x111111,roughness:0.9}));
+  conn.position.set(.025,.006,0); group.add(conn);
+  // Mounting flanges
+  [-0.02,.02].forEach(z=>{
+    const flange = new THREE.Mesh(new THREE.BoxGeometry(.060,.005,.010),
+      new THREE.MeshStandardMaterial({color:0x882200,roughness:0.5}));
+    flange.position.set(0,-.015,z); group.add(flange);
+    // M4 bolt hole indication
+    const hole = new THREE.Mesh(cyl(.002,.002,.006,8),
+      new THREE.MeshStandardMaterial({color:0x333333,roughness:1}));
+    hole.position.set(0,-.015,z); group.add(hole);
+  });
+  return group;
+}
+
+// Copper busbar — L-shaped extrusion with bolt holes
+function buildBusbarL(w,h,d,thickness,color){
+  const group = new THREE.Group();
+  const mat = new THREE.MeshStandardMaterial({color:color||0xb87333,roughness:0.2,metalness:0.95});
+  // Horizontal leg
+  const horiz = new THREE.Mesh(new THREE.BoxGeometry(w,thickness,d), mat);
+  group.add(horiz);
+  // Vertical leg
+  const vert = new THREE.Mesh(new THREE.BoxGeometry(thickness,h,d), mat.clone());
+  vert.position.set(w/2-thickness/2, h/2+thickness/2, 0); group.add(vert);
+  return group;
+}
+
+// Flat busbar extrusion
+function buildBusbarFlat(w,h,d,color){
+  const mat = new THREE.MeshStandardMaterial({
+    color:color||0xb87333,roughness:0.15,metalness:0.98,
+    envMapIntensity:1.5
+  });
+  const g = new THREE.Group();
+  const mesh = new THREE.Mesh(new THREE.BoxGeometry(w,h,d), mat);
+  g.add(mesh);
+  // Bolt holes (cylindrical cutout approximated as dark cylinders on faces)
+  [[w*.3,0,d*.4],[w*.3,0,-d*.4],[-w*.3,0,d*.4],[-w*.3,0,-d*.4]].forEach(([x,y,z])=>{
+    const hole = new THREE.Mesh(cyl(.003,.003,h+.002,8),
+      new THREE.MeshStandardMaterial({color:0x663300,roughness:1,metalness:0}));
+    hole.position.set(x,y,z);
+    g.add(hole);
+  });
+  return g;
+}
+
+// 630A fuse — ceramic cylinder with blade terminals
+function buildFuse(){
+  const group = new THREE.Group();
+  // Ceramic body
+  const body = new THREE.Mesh(cyl(.028,.028,.065,24),
+    new THREE.MeshStandardMaterial({color:0xddcc88,roughness:0.8,metalness:0.0}));
+  body.rotation.x = Math.PI/2; group.add(body);
+  // Ferrule caps (both ends)
+  [-0.032,.032].forEach(z=>{
+    const cap = new THREE.Mesh(cyl(.030,.030,.006,24),
+      new THREE.MeshStandardMaterial({color:0xdddddd,metalness:0.95,roughness:0.1}));
+    cap.rotation.x = Math.PI/2; cap.position.z=z; group.add(cap);
+    // Mounting bolt
+    const bolt = new THREE.Mesh(cyl(.005,.005,.016,8),
+      new THREE.MeshStandardMaterial({color:0xaaaaaa,metalness:0.9,roughness:0.2}));
+    bolt.rotation.x = Math.PI/2; bolt.position.z=z+.011; group.add(bolt);
+  });
+  // Rating label
+  const lbl = new THREE.Mesh(new THREE.BoxGeometry(.040,.018,.002),
+    new THREE.MeshStandardMaterial({color:0xffffff,roughness:1}));
+  group.add(lbl);
+  return group;
+}
+
+// Housing panel with screw bosses
+function buildCover(w,h,d,color,screwPositions){
+  const group = new THREE.Group();
+  const mat = new THREE.MeshStandardMaterial({
+    color:color||0x2a2a30,roughness:0.55,metalness:0.08,
+    transparent:true,opacity:1
+  });
+  const panel = new THREE.Mesh(new THREE.BoxGeometry(w,h,d), mat);
+  group.add(panel);
+  // Ribs (structural)
+  for(let i=-2;i<=2;i++){
+    const rib = new THREE.Mesh(new THREE.BoxGeometry(w*.9,.004,d),
+      new THREE.MeshStandardMaterial({color:0x222228,roughness:0.7}));
+    rib.position.y = i*.018; group.add(rib);
+  }
+  // Screw bosses
+  (screwPositions||[]).forEach(([x,z])=>{
+    const boss = new THREE.Mesh(cyl(.006,.006,d+.004,8),
+      new THREE.MeshStandardMaterial({color:0x3a3a42,roughness:0.6}));
+    boss.rotation.x = Math.PI/2; boss.position.set(x,0,0);
+    const screw = new THREE.Mesh(cyl(.003,.002,.003,6),
+      new THREE.MeshStandardMaterial({color:0x888888,metalness:0.9,roughness:0.2}));
+    screw.rotation.x = Math.PI/2; screw.position.set(x,0,d/2+.002);
+    group.add(boss); group.add(screw);
+  });
+  return group;
+}
+
+// Cable — flexible tube with plugs
+function buildCable(len,thick,color){
+  const group = new THREE.Group();
+  // Main run
+  const wire = new THREE.Mesh(cyl(thick,thick,len,8),
+    new THREE.MeshStandardMaterial({color:color||0x333333,roughness:0.9,metalness:0}));
+  group.add(wire);
+  // Overmold at each end
+  [-len*.45,len*.45].forEach(y=>{
+    const mold = new THREE.Mesh(cyl(thick*1.5,thick*1.5,len*.08,8),
+      new THREE.MeshStandardMaterial({color:0x222222,roughness:0.9}));
+    mold.position.y=y; group.add(mold);
+  });
+  return group;
+}
+
+// Busbar rod — round rod with threaded ends
+function buildBusbarRod(len,r,color){
+  const group = new THREE.Group();
+  const mat = new THREE.MeshStandardMaterial({color:color||0xb87333,roughness:0.15,metalness:0.99});
+  const rod = new THREE.Mesh(cyl(r,r,len,16),mat);
+  group.add(rod);
+  // Threaded ends (darker band)
+  [-len*.44,len*.44].forEach(y=>{
+    const thread = new THREE.Mesh(cyl(r*.9,r*.9,len*.1,16),
+      new THREE.MeshStandardMaterial({color:0x996622,roughness:0.4,metalness:0.9}));
+    thread.position.y=y; group.add(thread);
+  });
+  return group;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  PART MANIFEST
+// ═══════════════════════════════════════════════════════════════════
+// pos = [x,y,z] in meters (proton is ~200×180×120mm)
+// explodeDir = direction × magnitude for explosion offset
+
+const PARTS = [
+  // ── HOUSING ──────────────────────────────────────────────────────
+  { id:'top-cover', group:'Housing', color:0x2d2d35,
+    pn:'VX-ENC-101-xx', name:'Primary Enclosure Shell',
+    desc:'Primary structural enclosure. All internal components mount to this part via hex fasteners. Injection-molded thermoplastic with integral mounting bosses, cable-entry knockouts, and locating pins.',
+    torque:'10–15 in-lbs', fastener:'T-20 hex', material:'Thermoplastic (molded)', step:'Step 1',
+    photos:['null'],
+    pos:[0,0.082,0], rot:[0,0,0], explodeDir:[0,2.2,0],
+    build:()=>buildCover(0.202,0.018,0.124,0x2d2d35,
+      [[-0.07,0],[.07,0],[-.03,0],[.03,0]])
+  },
+  { id:'back-cover', group:'Housing', color:0x252530,
+    pn:'VX-ENC-102-xx', name:'Rear Access Panel',
+    desc:'Rear enclosure panel. Sealed to Top Cover with (6) M4×8 T-20 screws at 15 in-lbs. Provides IP-rated rear closure with strain-relief ports for all cable harnesses.',
+    torque:'15 in-lbs', fastener:'T-20 (M4×8)', material:'Thermoplastic (molded)', step:'Step 12, Fig 17',
+    photos:['null'],
+    pos:[0,0.010,-0.068], rot:[Math.PI/2,0,0], explodeDir:[0,0,-2.2],
+    build:()=>buildCover(0.200,0.158,0.014,0x252530,
+      [[-0.08,0],[.08,0],[0,0],[-.04,0],[.04,0]])
+  },
+  { id:'bottom-cover', group:'Housing', color:0x252530,
+    pn:'VX-ENC-103-xx', name:'Base Plate',
+    desc:'Bottom enclosure plate. (4) M5×12 T-25 screws at 25 in-lbs. Closes the contactor cavity and provides ground lug mounting point.',
+    torque:'25 in-lbs', fastener:'T-25 (M5×12)', material:'Thermoplastic (molded)', step:'Step 12, Fig 18',
+    photos:['null'],
+    pos:[0,-0.092,0], rot:[0,0,0], explodeDir:[0,-2.2,0],
+    build:()=>buildCover(0.200,0.014,0.124,0x252530,
+      [[-0.07,0],[.07,0],[0,0]])
+  },
+  { id:'cable-cover', group:'Housing', color:0x2d2d35,
+    pn:'VX-ENC-104-xx', name:'Cable Entry Shield',
+    desc:'Protects the charge cable landing busbar connection area at the bottom-front face. M4×8 hand-tight. Removed during cable installation.',
+    torque:'Hand tight', fastener:'T-20 (M4×8)', material:'Thermoplastic (molded)', step:'Step 13, Fig 19',
+    photos:['null'],
+    pos:[0,-0.100,0.042], rot:[0,0,0], explodeDir:[0,-2.5,0.8],
+    build:()=>buildCover(0.118,0.010,0.038,0x2d2d35,[[-0.04,0],[.04,0]])
+  },
+
+  // ── PCBA ─────────────────────────────────────────────────────────
+  { id:'pcba', group:'Electronics', color:0x1a5c2a,
+    pn:'VX-CTL-210-xx', name:'Power Management Board',
+    desc:'Main control board. Main control board. Manages contactor drive (relay coil excitation), real-time current measurement via fluxgate sensor on CAN bus, dual HV sense inputs, dual thermal switch inputs, ground fault detection, and serial comms communications. (4) M4×8 T-20 at 10 in-lbs.',
+    torque:'10 in-lbs', fastener:'T-20 (M4×8) ×4', material:'PCB/FR4 + ENIG copper', step:'Step 1, Slide 9',
+    photos:['null'],
+    pos:[0,0.010,0], rot:[0,0,0], explodeDir:[0,0.8,0],
+    build:()=>buildPCBA()
+  },
+
+  // ── CONTACTORS ───────────────────────────────────────────────────
+  { id:'contactor-pos', group:'Contactors', color:0x1a1a1a,
+    pn:'VX-SW-4K (Orbis)', name:'Main Switch — Rail A',
+    desc:'Orbis HV-SW series forced-guided DC contactor. 200 A continuous / 1000 V DC. Normally-open. Control board drives coil via relay output. Stuck-closed detected by sense circuit. Arc quenching via permanent magnet. M10 stud terminals torqued at 168 in-lbs.',
+    torque:'168 in-lbs (M10 studs)', fastener:'11-002463-01 (M10 cap nut)', material:'Glass-filled PA + Cu terminals', step:'Step 3, Fig 3',
+    photos:['null','null2'],
+    pos:[0.048,-0.020,0.008], rot:[0,0,0], explodeDir:[1.2,-0.4,0.4],
+    build:()=>buildContactor('POS')
+  },
+  { id:'contactor-neg', group:'Contactors', color:0x1a1a1a,
+    pn:'VX-SW-4K (Orbis)', name:'Main Switch — Rail B',
+    desc:'Orbis HV-SW series DC contactor — negative rail. Electrically identical to positive contactor, driven simultaneously by PCBA. Open-circuit verified by control board every 30 s. M10 stud torque 168 in-lbs.',
+    torque:'168 in-lbs (M10 studs)', fastener:'11-002463-01 (M10 cap nut)', material:'Glass-filled PA + Cu terminals', step:'Step 3, Fig 3',
+    photos:['null','null2'],
+    pos:[-0.048,-0.020,0.008], rot:[0,0,0], explodeDir:[-1.2,-0.4,0.4],
+    build:()=>buildContactor('NEG')
+  },
+
+  // ── Sensis SENSOR ───────────────────────────────────────────────────
+  { id:'lem', group:'Sensing', color:0xcc4400,
+    pn:'VX-SEN-320-01', name:'Current Transducer',
+    desc:'Sensis CT-500 fluxgate sensor — ±500 A AC/DC, output via CAN bus. Bus bar passes through aperture; sensor measures primary current via fluxgate compensation principle (zero-flux). Zero-drift < 0.3 A over temp. (2) M4 screws at 20 in-lbs.',
+    torque:'20 in-lbs', fastener:'11-002631-01 ×2', material:'Sensis fluxgate transducer', step:'Step 2, Slide 10',
+    photos:['null'],
+    pos:[0,0.030,0.032], rot:[0,0,0], explodeDir:[0,1.2,1.0],
+    build:()=>buildSensis()
+  },
+
+  // ── BUS BARS ─────────────────────────────────────────────────────
+  { id:'busbar-rod', group:'Bus Bars', color:0xb87333,
+    pn:'VX-BUS-430-xx', name:'Rail A Conductor Rod',
+    desc:'Solid copper rod passing through sensor aperture, connecting HV+ input to Orbis positive contactor terminal. Carries full charging current (rated to 500 A). M8 bolt at 108 in-lbs + M8 spring washer ensures consistent preload over thermal cycling.',
+    torque:'108 in-lbs', fastener:'M8 hex + spring washer', material:'C110 copper rod', step:'Step 3, Fig 3',
+    photos:['null'],
+    pos:[0.024,-0.002,0.028], rot:[0,0,Math.PI/2], explodeDir:[0.5,0.2,0.8],
+    build:()=>buildBusbarRod(0.068,0.005,0xb87333)
+  },
+  { id:'busbar-fuse', group:'Bus Bars', color:0xb87333,
+    pn:'VX-BUS-431-xx', name:'Rail B Bridge Conductor',
+    desc:'Copper extrusion bridging the 600 A/1000 V DC fuse output to the Orbis negative contactor. Drilled and tapped for M5×16 T-25 at 25 in-lbs (PCB side) and M10 cap nuts at 168 in-lbs (contactor side). Tin-plated contact surfaces.',
+    torque:'25 in-lbs / 168 in-lbs', fastener:'T-25 + M10 cap nut', material:'C110 copper extrusion, Sn-plated', step:'Step 8, Fig 4',
+    photos:['null'],
+    pos:[-0.024,-0.002,0.028], rot:[0,0,0], explodeDir:[-0.5,0.2,0.8],
+    build:()=>buildBusbarFlat(0.012,0.068,0.010,0xb87333)
+  },
+  { id:'busbar-landing-pos', group:'Bus Bars', color:0xb87333,
+    pn:'VX-BUS-432-xx', name:'Input Terminal Block — Rail A',
+    desc:'Positive DC cable termination busbar. Charge cable DC+ conductor lugs bolt here (M5×16 T-25 at 25 in-lbs). Also carries HV+ sense cable lug (M10 at 168 in-lbs). Surface finish: tin-plated for corrosion resistance. Qty 2 (left/right for dual cable inlet).',
+    torque:'25 in-lbs (M5) / 168 in-lbs (M10)', fastener:'T-25 ×2 + 11-002861-01 ×2', material:'C110 copper extrusion, Sn-plated', step:'Step 9, Fig 11',
+    photos:['null'],
+    pos:[0.050,-0.058,0.048], rot:[0,0,0], explodeDir:[0.6,-1.4,1.0],
+    build:()=>buildBusbarFlat(0.070,0.010,0.018,0xb87333)
+  },
+  { id:'busbar-landing-neg', group:'Bus Bars', color:0xb87333,
+    pn:'VX-BUS-432-xx', name:'Input Terminal Block — Rail B',
+    desc:'Negative DC cable termination busbar. Mirrors the HV+ landing busbar. Charge cable DC− conductor lugs bolt here. HV− sense cable lug at 168 in-lbs. Qty 2.',
+    torque:'25 in-lbs (M5) / 168 in-lbs (M10)', fastener:'T-25 ×2 + 11-002861-01 ×2', material:'C110 copper extrusion, Sn-plated', step:'Step 9, Fig 11',
+    photos:['null'],
+    pos:[-0.050,-0.058,0.048], rot:[0,0,0], explodeDir:[-0.6,-1.4,1.0],
+    build:()=>buildBusbarFlat(0.070,0.010,0.018,0xb87333)
+  },
+
+  // ── FUSE ─────────────────────────────────────────────────────────
+  { id:'fuse', group:'Protection', color:0xddcc88,
+    pn:'VX-FUS-540-xx', name:'Overcurrent Protection Element',
+    desc:'SafeArc Series ceramic current-limiting fuse, 600 A, 1000 V DC. Protects HV DC charging path against overcurrent. Failure is non-resettable — unit requires full fuse swap. Mounted on busbar assembly with M10 compression nuts.',
+    torque:'168 in-lbs (M10 nuts)', fastener:'M10 compression nut', material:'Ceramic / silver element', step:'Step 4, Fig 4',
+    photos:['null'],
+    pos:[0,-0.018,-0.022], rot:[0,0,0], explodeDir:[0,-0.8,-1.2],
+    build:()=>buildFuse()
+  },
+
+  // ── CABLES ───────────────────────────────────────────────────────
+  { id:'cable-lem', group:'Harness', color:0xdddddd,
+    pn:'VX-CBL-650-xx', name:'Transducer Signal Harness',
+    desc:'Connects Sensis fluxgate sensor to PCBA. Carries 12 V supply, comm-H, comm-L, GND. 3-pin and 4-pin latching signal connectors. Cable length ~120 mm. Routed inside housing with clip to prevent contact with busbars.',
+    torque:'N/A', fastener:'keyed push-lock', material:'PVC jacket, 26 AWG twisted pair', step:'Step 2, Slide 10',
+    photos:['null'],
+    pos:[0.042,0.020,0.026], rot:[0,0,Math.PI/12], explodeDir:[0.7,0.8,0.6],
+    build:()=>buildCable(0.055,.004,0xdddddd)
+  },
+  { id:'cable-hv-pos', group:'Harness', color:0xcc2222,
+    pn:'VX-CBL-651-xx', name:'Rail A Voltage Sense Lead',
+    desc:'High-voltage positive sense cable. Routes from HV+ landing busbar to PCBA 2-pin sense input. Allows control board to monitor DC bus voltage. Silicone insulation rated 1000 V DC. Lug end M10 at 168 in-lbs.',
+    torque:'168 in-lbs (M10 lug)', fastener:'11-002861-01 ×2', material:'Silicone 600 V, 18 AWG', step:'Step 11, Fig 16',
+    photos:['null'],
+    pos:[0.065,-0.012,0.005], rot:[0,0,-Math.PI/8], explodeDir:[1.1,0.4,0.2],
+    build:()=>buildCable(0.078,.005,0xcc2222)
+  },
+  { id:'cable-hv-neg', group:'Harness', color:0x111111,
+    pn:'VX-CBL-652-xx', name:'Rail B Voltage Sense Lead',
+    desc:'High-voltage negative sense cable. Routes from HV− landing busbar to PCBA 3-pin sense input. Used in conjunction with HV+ sense for differential voltage measurement. Same silicone spec as HV+ sense cable.',
+    torque:'168 in-lbs (M10 lug)', fastener:'11-002861-01 ×2', material:'Silicone 600 V, 18 AWG', step:'Step 11, Fig 16',
+    photos:['null'],
+    pos:[-0.065,-0.012,0.005], rot:[0,0,Math.PI/8], explodeDir:[-1.1,0.4,0.2],
+    build:()=>buildCable(0.078,.005,0x222222)
+  },
+  { id:'cable-ground', group:'Harness', color:0x336600,
+    pn:'VX-CBL-653-xx', name:'Protective Earth Bond',
+    desc:'Earth bond cable from module chassis to system ground lug. Green/yellow. Ensures all exposed metallic parts are bonded to protective earth per applicable EV charging standards. Connected with M5 ring lug at 20 in-lbs.',
+    torque:'20 in-lbs', fastener:'M5 ring lug + T-25', material:'Green/yellow, 12 AWG, 600 V', step:'Step 5, Slide 11',
+    photos:['null'],
+    pos:[-0.055,0.012,-0.015], rot:[Math.PI/8,0,0], explodeDir:[-0.9,0.5,-0.6],
+    build:()=>buildCable(0.048,.006,0x336600)
+  },
+  { id:'cable-thermal-a', group:'Harness', color:0x0044bb,
+    pn:'VX-CBL-654-xx', name:'Thermal Monitor Lead — A',
+    desc:'Connects thermal cutout switch (bimetal, opens at 85°C) on HV+ busbar to PCBA. If busbar overtemperature: control board opens contactors and latches thermal fault. Restores after cooldown below 65°C and power cycle. 2-pin latching signal.',
+    torque:'N/A', fastener:'keyed push-lock', material:'PVC, 22 AWG', step:'Step 9, Fig 12',
+    photos:['null'],
+    pos:[0.078,-0.038,0.040], rot:[0,0,-Math.PI/4], explodeDir:[1.1,-0.6,0.7],
+    build:()=>buildCable(0.055,.004,0x0044bb)
+  },
+  { id:'cable-thermal-b', group:'Harness', color:0x0044bb,
+    pn:'VX-CBL-654-xx', name:'Thermal Monitor Lead — B',
+    desc:'Second thermal cutout cable — HV− busbar side. Two independent thermal monitors for redundancy. Both must be open for the fault to clear. Same connector type as Cable A.',
+    torque:'N/A', fastener:'keyed push-lock', material:'PVC, 22 AWG', step:'Step 9, Fig 12',
+    photos:['null'],
+    pos:[-0.078,-0.038,0.040], rot:[0,0,Math.PI/4], explodeDir:[-1.1,-0.6,0.7],
+    build:()=>buildCable(0.055,.004,0x0044bb)
+  },
+];
+
+// ═══════════════════════════════════════════════════════════════════
+//  PHOTO REFERENCES MAP
+// ═══════════════════════════════════════════════════════════════════
+const PHOTO_SRCS = {};
+try { PHOTO_SRCS['null']   = null; } catch(e){}
+try { PHOTO_SRCS['null']    = null; } catch(e){}
+try { PHOTO_SRCS['null']        = null; } catch(e){}
+try { PHOTO_SRCS['null']  = null; } catch(e){}
+try { PHOTO_SRCS['null2'] = null2; } catch(e){}
+try { PHOTO_SRCS['null']     = null; } catch(e){}
+
+// ═══════════════════════════════════════════════════════════════════
+//  RENDERER SETUP
+// ═══════════════════════════════════════════════════════════════════
+const canvas = document.getElementById('c');
+const W = () => canvas.parentElement.clientWidth;
+const H = () => canvas.parentElement.clientHeight;
+
+const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:false});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.physicallyCorrectLights = true;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.1;
+renderer.setClearColor(0x111114);
+renderer.setSize(W(),H(),false);
+
+const scene  = new THREE.Scene();
+scene.fog    = new THREE.FogExp2(0x111114, 0.6);
+
+const camera = new THREE.PerspectiveCamera(38, W()/H(), 0.001, 20);
+camera.position.set(0.25, 0.15, 0.35);
+
+// ── Lighting ──
+scene.add(new THREE.AmbientLight(0xffffff,0.9));
+
+const key = new THREE.DirectionalLight(0xfff5e0,2.2);
+key.position.set(1.5,2.5,1.5); key.castShadow=true;
+key.shadow.mapSize.set(2048,2048);
+key.shadow.camera.near=0.01; key.shadow.camera.far=5;
+key.shadow.bias=-0.001;
+scene.add(key);
+
+const fill = new THREE.DirectionalLight(0x94c8e9,1.2);
+fill.position.set(-2,1,-1); scene.add(fill);
+
+const rim = new THREE.DirectionalLight(0xf86a1b,0.5);
+rim.position.set(0,-2,-2); scene.add(rim);
+
+const backTop = new THREE.DirectionalLight(0xffffff,1.0);
+backTop.position.set(0,3,-2); scene.add(backTop);
+
+// ── Ground ──
+const ground = new THREE.Mesh(
+  new THREE.PlaneGeometry(3,3),
+  new THREE.MeshStandardMaterial({color:0x181820,roughness:0.9,metalness:0.1})
+);
+ground.rotation.x=-Math.PI/2; ground.position.y=-0.115; ground.receiveShadow=true;
+scene.add(ground);
+
+// ── Grid ──
+const grid = new THREE.GridHelper(1.5,40,0x1e1e28,0x181820);
+grid.position.y=-0.113; scene.add(grid);
+
+// ═══════════════════════════════════════════════════════════════════
+//  BUILD ALL MESHES
+// ═══════════════════════════════════════════════════════════════════
+const mainGroup   = new THREE.Group();
+scene.add(mainGroup);
+
+const partObjects = {}; // id → {group, meshes, origPos, origRot, edges}
+const allMeshes   = [];
+
+PARTS.forEach(p => {
+  const obj = p.build();
+  obj.position.set(...p.pos);
+  if(p.rot) obj.rotation.set(...p.rot);
+  obj.traverse(c=>{
+    if(c.isMesh){
+      c.castShadow=true; c.receiveShadow=true;
+      c.userData.partId=p.id; c.userData.part=p;
+      allMeshes.push(c);
+    }
+  });
+  mainGroup.add(obj);
+
+  // Edge wireframe on each mesh child
+  const edgeGroup = new THREE.Group();
+  obj.traverse(c=>{
+    if(c.isMesh &amp;&amp; c.geometry){
+      const edges = new THREE.EdgesGeometry(c.geometry,15);
+      const line  = new THREE.LineSegments(edges,
+        new THREE.LineBasicMaterial({color:0xffffff,transparent:true,opacity:0.08}));
+      // lines are in local space of c
+      const lineWorld = line;
+      // parent to same obj so transform matches
+      c.add(lineWorld);
+    }
+  });
+
+  partObjects[p.id] = {
+    group:   obj,
+    origPos: new THREE.Vector3(...p.pos),
+    origRot: p.rot ? [...p.rot] : [0,0,0],
+  };
+});
+
+// ═══════════════════════════════════════════════════════════════════
+//  ORBIT CONTROLS (custom spherical)
+// ═══════════════════════════════════════════════════════════════════
+let theta=-0.4, phi=0.4, radius=0.45;
+const target = new THREE.Vector3(0,-0.01,0);
+
+function updateCamera(){
+  camera.position.set(
+    target.x + radius*Math.sin(theta)*Math.cos(phi),
+    target.y + radius*Math.sin(phi),
+    target.z + radius*Math.cos(theta)*Math.cos(phi)
+  );
+  camera.lookAt(target);
+}
+updateCamera();
+
+let dragging=false, lx=0, ly=0, autoRot=true;
+canvas.addEventListener('mousedown',e=>{dragging=true;lx=e.clientX;ly=e.clientY;autoRot=false;});
+window.addEventListener('mouseup',()=>dragging=false);
+window.addEventListener('mousemove',e=>{
+  if(!dragging)return;
+  theta -= (e.clientX-lx)*0.007;
+  phi    = Math.max(-Math.PI/2+.05, Math.min(Math.PI/2-.05, phi+(e.clientY-ly)*0.007));
+  lx=e.clientX; ly=e.clientY;
+  updateCamera();
+});
+canvas.addEventListener('wheel',e=>{
+  radius=Math.max(0.12,Math.min(1.5,radius+e.deltaY*0.0004));
+  updateCamera(); e.preventDefault();
+},{passive:false});
+
+// Touch support
+let t0=null;
+canvas.addEventListener('touchstart',e=>{t0={x:e.touches[0].clientX,y:e.touches[0].clientY};autoRot=false;});
+canvas.addEventListener('touchmove',e=>{
+  if(!t0)return;
+  const dx=e.touches[0].clientX-t0.x, dy=e.touches[0].clientY-t0.y;
+  theta-=dx*.007; phi=Math.max(-1.4,Math.min(1.4,phi+dy*.007));
+  t0={x:e.touches[0].clientX,y:e.touches[0].clientY};
+  updateCamera(); e.preventDefault();
+},{passive:false});
+
+// ═══════════════════════════════════════════════════════════════════
+//  EXPLODE
+// ═══════════════════════════════════════════════════════════════════
+let explodeFactor=0;
+const sliderEl=document.getElementById('explode-slider');
+const sliderVal=document.getElementById('explode-val');
+
+function applyExplode(t){
+  PARTS.forEach(p=>{
+    const obj = partObjects[p.id].group;
+    const orig= partObjects[p.id].origPos;
+    const dir = new THREE.Vector3(...p.explodeDir);
+    const mag = dir.length();
+    dir.normalize();
+    obj.position.copy(orig).addScaledVector(dir, t*mag*0.085);
+  });
+}
+
+sliderEl.addEventListener('input',()=>{
+  explodeFactor=+sliderEl.value/100;
+  sliderVal.textContent=Math.round(explodeFactor*100)+'%';
+  applyExplode(explodeFactor);
+  syncButtons();
+});
+
+function syncButtons(){
+  document.getElementById('btn-asm').classList.toggle('active',explodeFactor<0.05);
+  document.getElementById('btn-exp').classList.toggle('active',explodeFactor>0.75);
+}
+
+document.getElementById('btn-asm').addEventListener('click',()=>{
+  animateExplode(0); syncButtons();});
+document.getElementById('btn-exp').addEventListener('click',()=>{
+  animateExplode(1); syncButtons();});
+
+let animFrame=null;
+function animateExplode(target){
+  if(animFrame) cancelAnimationFrame(animFrame);
+  const start=explodeFactor, startT=performance.now(), dur=700;
+  function step(now){
+    const t=Math.min(1,(now-startT)/dur);
+    const ease=t<.5?4*t*t*t:(t-1)*(2*t-2)*(2*t-2)+1;
+    explodeFactor=start+(target-start)*ease;
+    sliderEl.value=explodeFactor*100;
+    sliderVal.textContent=Math.round(explodeFactor*100)+'%';
+    applyExplode(explodeFactor);
+    if(t<1) animFrame=requestAnimationFrame(step);
+    else syncButtons();
+  }
+  animFrame=requestAnimationFrame(step);
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  X-RAY MODE
+// ═══════════════════════════════════════════════════════════════════
+let xray=false;
+const housingIds=new Set(['top-cover','back-cover','bottom-cover','cable-cover']);
+
+document.getElementById('btn-xray').addEventListener('click',()=>{
+  xray=!xray;
+  document.getElementById('btn-xray').classList.toggle('active',xray);
+  PARTS.forEach(p=>{
+    if(!housingIds.has(p.id))return;
+    const obj=partObjects[p.id].group;
+    obj.traverse(c=>{
+      if(c.isMesh &amp;&amp; c.material){
+        c.material.transparent=xray;
+        c.material.opacity=xray?0.12:1;
+        c.material.depthWrite=!xray;
+      }
+    });
+  });
+});
+
+// ═══════════════════════════════════════════════════════════════════
+//  RAYCASTING &amp; SELECTION
+// ═══════════════════════════════════════════════════════════════════
+const raycaster=new THREE.Raycaster();
+const mouse2=new THREE.Vector2();
+let activePart=null;
+const tooltip=document.getElementById('tooltip');
+
+function getOriginalColor(mesh){
+  return mesh.userData._origColor;
+}
+
+PARTS.forEach(p=>{
+  const obj=partObjects[p.id].group;
+  obj.traverse(c=>{
+    if(c.isMesh &amp;&amp; c.material){
+      c.userData._origColor=c.material.color.clone();
+      c.userData._origEmissive=c.material.emissive ? c.material.emissive.clone() : new THREE.Color(0);
+    }
+  });
+});
+
+function selectPart(part){
+  clearSelection(false);
+  activePart=part?part.id:null;
+  if(!part)return;
+
+  // Highlight active, dim others
+  PARTS.forEach(p=>{
+    const obj=partObjects[p.id].group;
+    const isMe=p.id===part.id;
+    obj.traverse(c=>{
+      if(c.isMesh &amp;&amp; c.material){
+        if(isMe){
+          c.material.emissive=new THREE.Color(0x1a0a00).multiplyScalar(1);
+          c.material.emissiveIntensity=1;
+          c.material.transparent=false;
+          c.material.opacity=1;
+        } else {
+          c.material.emissive=new THREE.Color(0);
+          c.material.transparent=true;
+          c.material.opacity=xray&amp;&amp;housingIds.has(p.id)?0.08:0.18;
+          c.material.depthWrite=false;
+        }
+      }
+    });
+  });
+
+  // Sidebar
+  document.querySelectorAll('.pt-item').forEach(el=>el.classList.toggle('active',el.dataset.id===part.id));
+
+  // Detail panel
+  document.getElementById('dp-pn').textContent   = part.pn;
+  document.getElementById('dp-name').textContent = part.name;
+  document.getElementById('dp-desc').textContent = part.desc;
+  document.getElementById('dp-torque').textContent   = part.torque;
+  document.getElementById('dp-fastener').textContent = part.fastener;
+  document.getElementById('dp-material').textContent = part.material;
+  document.getElementById('dp-step').textContent     = part.step;
+
+  // Photos
+  const ph=document.getElementById('dp-photos');
+  ph.innerHTML='';
+  if(part.photos &amp;&amp; part.photos.length){
+    const h4=document.createElement('h4');
+    h4.textContent='Reference Photos';
+    ph.appendChild(h4);
+    part.photos.forEach(key=>{
+      const src=PHOTO_SRCS[key];
+      if(!src)return;
+      const img=document.createElement('img');
+      img.src=src;
+      img.alt=part.name;
+      img.addEventListener('click',()=>openLightbox(src));
+      ph.appendChild(img);
+    });
+  } else {
+    ph.innerHTML='<div id=&quot;dp-empty&quot; style=&quot;padding:16px 0;font-size:10px;color:#333;text-align:center&quot;>No reference photos for this part</div>';
+  }
+}
+
+function clearSelection(resetPanel=true){
+  PARTS.forEach(p=>{
+    const obj=partObjects[p.id].group;
+    obj.traverse(c=>{
+      if(c.isMesh &amp;&amp; c.material){
+        c.material.emissive=new THREE.Color(0);
+        c.material.emissiveIntensity=0;
+        c.material.transparent=xray&amp;&amp;housingIds.has(p.id);
+        c.material.opacity=xray&amp;&amp;housingIds.has(p.id)?0.12:1;
+        c.material.depthWrite=true;
+      }
+    });
+  });
+  document.querySelectorAll('.pt-item').forEach(el=>el.classList.remove('active'));
+  activePart=null;
+  if(resetPanel){
+    document.getElementById('dp-pn').textContent='—';
+    document.getElementById('dp-name').textContent='Select a component';
+    document.getElementById('dp-desc').textContent='Click any part in the 3D view or the assembly tree to inspect it.';
+    document.getElementById('dp-desc').style.color='#333';
+    document.getElementById('dp-torque').textContent='—';
+    document.getElementById('dp-fastener').textContent='—';
+    document.getElementById('dp-material').textContent='—';
+    document.getElementById('dp-step').textContent='—';
+    document.getElementById('dp-photos').innerHTML='<div id=&quot;dp-empty&quot;>← Select a part to see<br>reference photos &amp;amp; specs</div>';
+  }
+}
+
+canvas.addEventListener('click',e=>{
+  if(Math.abs(e.clientX-lx)<3&amp;&amp;Math.abs(e.clientY-ly)<3){
+    const r=canvas.getBoundingClientRect();
+    mouse2.x= ((e.clientX-r.left)/r.width)*2-1;
+    mouse2.y=-((e.clientY-r.top)/r.height)*2+1;
+    raycaster.setFromCamera(mouse2,camera);
+    const hits=raycaster.intersectObjects(allMeshes,false);
+    if(hits.length){
+      const part=hits[0].object.userData.part;
+      if(part) selectPart(part);
+    } else {
+      clearSelection();
+    }
+  }
+});
+
+// Hover tooltip
+let hoverLast=null;
+canvas.addEventListener('mousemove',e=>{
+  if(dragging){tooltip.style.display='none';return;}
+  const r=canvas.getBoundingClientRect();
+  mouse2.x= ((e.clientX-r.left)/r.width)*2-1;
+  mouse2.y=-((e.clientY-r.top)/r.height)*2+1;
+  raycaster.setFromCamera(mouse2,camera);
+  const hits=raycaster.intersectObjects(allMeshes,false);
+  if(hits.length){
+    const part=hits[0].object.userData.part;
+    if(part){
+      canvas.style.cursor='pointer';
+      if(part.id!==hoverLast){
+        hoverLast=part.id;
+        tooltip.textContent=part.name;
+        tooltip.style.display='block';
+      }
+      tooltip.style.left=(e.clientX-r.left+14)+'px';
+      tooltip.style.top =(e.clientY-r.top -10)+'px';
+      return;
+    }
+  }
+  hoverLast=null;
+  tooltip.style.display='none';
+  canvas.style.cursor='grab';
+});
+
+// ═══════════════════════════════════════════════════════════════════
+//  SIDEBAR
+// ═══════════════════════════════════════════════════════════════════
+const tree=document.getElementById('parts-tree');
+const groups=[...new Set(PARTS.map(p=>p.group))];
+groups.forEach(g=>{
+  const hdr=document.createElement('div');
+  hdr.className='pt-group'; hdr.textContent=g; tree.appendChild(hdr);
+  PARTS.filter(p=>p.group===g).forEach(p=>{
+    const item=document.createElement('div');
+    item.className='pt-item'; item.dataset.id=p.id;
+    // Color dot
+    const dot=document.createElement('div');
+    dot.className='pt-dot';
+    dot.style.background='#'+p.color.toString(16).padStart(6,'0');
+    dot.style.border='1px solid rgba(255,255,255,0.15)';
+    const label=document.createElement('div');
+    label.innerHTML=`${p.name}<div class=&quot;pt-sub&quot;>${p.pn}</div>`;
+    item.appendChild(dot); item.appendChild(label);
+    item.addEventListener('click',()=>selectPart(p));
+    tree.appendChild(item);
+  });
+});
+
+// ═══════════════════════════════════════════════════════════════════
+//  KEYBOARD SHORTCUTS
+// ═══════════════════════════════════════════════════════════════════
+document.addEventListener('keydown',e=>{
+  if(e.key==='x'||e.key==='X'){
+    const v=explodeFactor<0.5?1:0;
+    animateExplode(v); syncButtons();
+  }
+  if(e.key==='r'||e.key==='R'){
+    theta=-0.4;phi=0.4;radius=0.45;updateCamera();
+    clearSelection(); autoRot=true;
+  }
+  if(e.key==='h'||e.key==='H'){
+    document.getElementById('btn-xray').click();
+  }
+  if(e.key==='Escape') clearSelection();
+});
+
+// ═══════════════════════════════════════════════════════════════════
+//  RESET BUTTON
+// ═══════════════════════════════════════════════════════════════════
+document.getElementById('btn-reset').addEventListener('click',()=>{
+  theta=-0.4;phi=0.4;radius=0.45;updateCamera();
+  clearSelection(); autoRot=true;
+  animateExplode(0); syncButtons();
+});
+
+// ═══════════════════════════════════════════════════════════════════
+//  LIGHTBOX
+// ═══════════════════════════════════════════════════════════════════
+const lb=document.getElementById('lb');
+const lbImg=document.getElementById('lb-img');
+function openLightbox(src){lb.classList.add('on');lbImg.src=src;}
+lb.addEventListener('click',()=>{lb.classList.remove('on');lbImg.src='';});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')lb.classList.remove('on');});
+
+// ═══════════════════════════════════════════════════════════════════
+//  RESIZE
+// ═══════════════════════════════════════════════════════════════════
+window.addEventListener('resize',()=>{
+  renderer.setSize(W(),H(),false);
+  camera.aspect=W()/H(); camera.updateProjectionMatrix();
+});
+
+// ═══════════════════════════════════════════════════════════════════
+//  RENDER LOOP
+// ═══════════════════════════════════════════════════════════════════
+const clock=new THREE.Clock();
+(function loop(){
+  requestAnimationFrame(loop);
+  if(autoRot&amp;&amp;!dragging){ theta+=clock.getDelta()*0.20; updateCamera(); }
+  else clock.getDelta();
+  renderer.render(scene,camera);
+})();
+
+</script>
+</body>
+</html>
+" style="width:100%;height:580px;border:none;display:block;"></iframe>
+  </div>
+
   <!-- 06. SKETCH SLIDESHOW -->
   <div class="card">
     <div class="card-header">
@@ -282,6 +2259,593 @@ window.addEventListener('resize', () => {
     bars.forEach(function(b, i) { b.classList.toggle('active', i === cur); });
   };
   setInterval(function() { goSlide((cur + 1) % total); }, 3500);
+})();
+</script>
+
+
+<script>
+// ── ChargeBlaster Game ──
+(function(){
+
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+const W = 720, H = 540;
+
+// ── Brand palette (mirrored in JS for canvas drawing) ────────────────────────
+const CP = {
+  orange:     '#f86a1b',
+  darkBlue:   '#0e5789',
+  midBlue:    '#50a0d9',
+  steelBlue:  '#799cae',
+  lightBlue:  '#94d2e9',
+  yellow:     '#fbb315',
+  green:      '#6ba239',
+  red:        '#c91f16',
+  dark:       '#212121',
+  darkGray:   '#545454',
+  gray:       '#797a7d',
+  lightGray:  '#f2f2f2',
+  white:      '#ffffff',
+};
+
+// ── State ────────────────────────────────────────────────────────────────────
+let state = 'start';
+let mx = W/2, my = H/2;
+let frameN = 0, score = 0, wave = 1, lives = 3;
+let evs = [], bullets = [], particles = [], sparks = [];
+let shakeX = 0, shakeY = 0, shakeMag = 0;
+let waveTimer = 0, waveSpawnLeft = 0, waveSpawnInterval = 0;
+let waveLabel = '', waveLabelTimer = 0;
+let shootCooldown = 0;
+let upgradeLevel = 0;
+let chargedCount = 0;
+
+// Upgrades use CP brand colors
+const UPGRADES = [
+  { name:'Home Flex', color: CP.green,    shotColor:'#a5d6a7', multi:1, spread:1 },
+  { name:'CT4000',    color: CP.midBlue,  shotColor:'#b3d9f0', multi:2, spread:2 },
+  { name:'Express+',  color: CP.orange,   shotColor:'#fbc89a', multi:3, spread:3 },
+  { name:'Fleet',     color: CP.yellow,   shotColor:'#fde494', multi:5, spread:5 },
+];
+
+const EV_MODELS = [
+  { name:'Tesla Model 3',    emoji:'🚗', maxHp:3, speed:1.1, color: CP.midBlue,  reward:20 },
+  { name:'Chevy Bolt',       emoji:'🚙', maxHp:2, speed:1.4, color: CP.green,    reward:15 },
+  { name:'F-150 Lightning',  emoji:'🛻', maxHp:5, speed:0.7, color: CP.steelBlue,reward:35 },
+  { name:'Rivian R1T',       emoji:'🚐', maxHp:7, speed:0.5, color: CP.orange,   reward:50 },
+  { name:'Nissan Leaf',      emoji:'🚕', maxHp:1, speed:1.8, color: CP.yellow,   reward:10 },
+];
+
+const STATION = { x: 80, y: H/2, w: 50, h: 84 };
+
+// ── Input ─────────────────────────────────────────────────────────────────────
+canvas.addEventListener('mousemove', e => {
+  const r = canvas.getBoundingClientRect();
+  mx = e.clientX - r.left; my = e.clientY - r.top;
+});
+canvas.addEventListener('touchmove', e => {
+  e.preventDefault();
+  const r = canvas.getBoundingClientRect();
+  mx = e.touches[0].clientX - r.left; my = e.touches[0].clientY - r.top;
+}, { passive: false });
+
+// Auto-fire is always on — no hold needed
+let paused = false;
+
+document.getElementById('startBtn').onclick   = startGame;
+document.getElementById('restartBtn').onclick = startGame;
+
+const pauseBtn  = document.getElementById('pauseBtn');
+const pauseScr  = document.getElementById('pauseScreen');
+document.getElementById('resumeBtn').onclick  = resumeGame;
+
+pauseBtn.onclick = () => {
+  if (state !== 'playing') return;
+  paused = true;
+  state = 'paused';
+  pauseBtn.textContent = '▶ Resume';
+  pauseBtn.onclick = resumeGame;
+  pauseScr.classList.remove('hidden');
+};
+
+function resumeGame() {
+  if (state !== 'paused') return;
+  paused = false;
+  state = 'playing';
+  pauseBtn.textContent = '⏸ Pause';
+  pauseBtn.onclick = () => {
+    if (state !== 'playing') return;
+    paused = true; state = 'paused';
+    pauseBtn.textContent = '▶ Resume';
+    pauseBtn.onclick = resumeGame;
+    pauseScr.classList.remove('hidden');
+  };
+  pauseScr.classList.add('hidden');
+  loop();
+}
+
+// Keyboard shortcut: Escape or P to pause/resume
+document.addEventListener('keydown', e => {
+  if (e.code === 'Escape' || e.code === 'KeyP') {
+    if (state === 'playing') pauseBtn.onclick();
+    else if (state === 'paused') resumeGame();
+  }
+});
+
+// ── Game init ─────────────────────────────────────────────────────────────────
+function startGame() {
+  document.getElementById('startScreen').classList.add('hidden');
+  document.getElementById('goScreen').classList.add('hidden');
+  evs = []; bullets = []; particles = []; sparks = [];
+  score = 0; lives = 3; wave = 1; frameN = 0;
+  chargedCount = 0; upgradeLevel = 0; shakeMag = 0;
+  paused = false;
+  state = 'playing';
+  pauseBtn.textContent = '⏸ Pause';
+  pauseBtn.classList.remove('hidden');
+  pauseScr.classList.add('hidden');
+  startWave(1);
+  loop();
+}
+
+function startWave(w) {
+  wave = w;
+  waveLabel = `Wave ${w}`;
+  waveLabelTimer = 130;
+  document.getElementById('waveTag').textContent = `Wave ${w}`;
+  document.getElementById('waveTag').classList.remove('hidden');
+  waveSpawnLeft = 6 + w * 3;
+  waveSpawnInterval = Math.max(28, 80 - w * 5);
+  waveTimer = waveSpawnInterval;
+  upgradeLevel = Math.min(3, Math.floor((w - 1) / 3));
+}
+
+// ── Spawning ──────────────────────────────────────────────────────────────────
+function spawnEV() {
+  const model = EV_MODELS[Math.floor(Math.random() * EV_MODELS.length)];
+  const lane  = 60 + Math.random() * (H - 120);
+  const hp    = model.maxHp + Math.floor(wave / 3);
+  evs.push({
+    x: W + 40, y: lane,
+    w: 54, h: 30,
+    hp, maxHp: hp,
+    speed: model.speed * (1 + wave * 0.05),
+    model,
+    charged: 0,
+    full: false,
+    hitFlash: 0,
+    exitTimer: 0,
+  });
+}
+
+// ── Shooting ──────────────────────────────────────────────────────────────────
+function shoot() {
+  if (shootCooldown > 0) return;
+  const up = UPGRADES[upgradeLevel];
+  const ox = STATION.x + STATION.w / 2;
+  const oy = STATION.y;
+  const dx = mx - ox, dy = my - oy;
+  const baseAngle = Math.atan2(dy, dx);
+  const spread = (up.spread - 1) * 0.18;
+  for (let i = 0; i < up.multi; i++) {
+    let angle = baseAngle;
+    if (up.multi > 1) angle = baseAngle - spread/2 + (spread / (up.multi-1)) * i;
+    bullets.push({ x:ox, y:oy, vx:Math.cos(angle)*9, vy:Math.sin(angle)*9,
+                   color:up.shotColor, life:80, r:5 });
+  }
+  spawnParticles(ox, oy, up.shotColor, 4, 2);
+  shootCooldown = Math.max(5, 14 - wave);
+}
+
+// ── Particles / Sparks ────────────────────────────────────────────────────────
+function spawnParticles(x, y, color, n, spd) {
+  for (let i = 0; i < n; i++) {
+    const a = Math.random() * Math.PI * 2;
+    const s = spd * (0.5 + Math.random());
+    particles.push({ x, y, vx:Math.cos(a)*s, vy:Math.sin(a)*s, life:30+Math.random()*20, color, r:2+Math.random()*3 });
+  }
+}
+function spawnSpark(x, y) {
+  for (let i = 0; i < 5; i++) {
+    const a = Math.random() * Math.PI * 2;
+    sparks.push({ x, y, vx:Math.cos(a)*(1+Math.random()*3), vy:Math.sin(a)*(1+Math.random()*3), life:18+Math.random()*14 });
+  }
+}
+function screenShake(mag) { shakeMag = Math.max(shakeMag, mag); }
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+function lerpColor(a, b, t) {
+  const ah = a.replace('#',''), bh = b.replace('#','');
+  const ar=parseInt(ah.slice(0,2),16), ag=parseInt(ah.slice(2,4),16), ab=parseInt(ah.slice(4,6),16);
+  const br=parseInt(bh.slice(0,2),16), bg=parseInt(bh.slice(2,4),16), bb=parseInt(bh.slice(4,6),16);
+  return `rgb(${Math.round(ar+(br-ar)*t)},${Math.round(ag+(bg-ag)*t)},${Math.round(ab+(bb-ab)*t)})`;
+}
+
+// ── Draw background ───────────────────────────────────────────────────────────
+function drawBg() {
+  // Dark blue gradient — CP dark-blue family
+  const grad = ctx.createLinearGradient(0, 0, W, H);
+  grad.addColorStop(0, '#092e4a');
+  grad.addColorStop(1, '#061c2e');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, W, H);
+
+  // Subtle grid — CP steel-blue tint
+  ctx.strokeStyle = 'rgba(121,156,174,0.08)';
+  ctx.lineWidth = 1;
+  for (let x = 0; x < W; x += 50) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); }
+  for (let y = 0; y < H; y += 50) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
+
+  // Scanlines
+  for (let y = 0; y < H; y += 4) {
+    ctx.fillStyle = 'rgba(0,0,0,0.06)';
+    ctx.fillRect(0, y, W, 2);
+  }
+
+  // Orange left accent bar (5px) matching CP title slide style
+  ctx.fillStyle = CP.orange;
+  ctx.fillRect(0, 0, 4, H);
+}
+
+// ── Draw station ──────────────────────────────────────────────────────────────
+function drawStation() {
+  const up = UPGRADES[upgradeLevel];
+  const sx = STATION.x - STATION.w/2;
+  const sy = STATION.y - STATION.h/2;
+
+  // Glow halo using upgrade color
+  const glow = ctx.createRadialGradient(STATION.x, STATION.y, 4, STATION.x, STATION.y, 72);
+  glow.addColorStop(0, up.color + '33');
+  glow.addColorStop(1, 'transparent');
+  ctx.fillStyle = glow;
+  ctx.fillRect(STATION.x-80, STATION.y-80, 160, 160);
+
+  // Body — CP dark body with border-top in orange (card style)
+  ctx.fillStyle = '#0e2d42';
+  ctx.beginPath(); ctx.roundRect(sx, sy, STATION.w, STATION.h, 2); ctx.fill();
+
+  // Border-top orange (card accent)
+  ctx.fillStyle = CP.orange;
+  ctx.fillRect(sx, sy, STATION.w, 3);
+
+  // Left color stripe (upgrade color)
+  ctx.fillStyle = up.color;
+  ctx.fillRect(sx, sy+3, 4, STATION.h-3);
+
+  // Screen
+  ctx.fillStyle = '#051015';
+  ctx.fillRect(sx+8, sy+10, STATION.w-12, 28);
+
+  // Screen text — "ChargePoint" in orange, product name in white
+  ctx.font = 'bold 7px Arial';
+  ctx.textAlign = 'center';
+  ctx.fillStyle = CP.orange;
+  ctx.fillText('ChargePoint', STATION.x+2, sy+21);
+  ctx.font = '6px Arial';
+  ctx.fillStyle = CP.lightBlue;
+  ctx.fillText(up.name, STATION.x+2, sy+31);
+
+  // Plug
+  ctx.font = '17px serif';
+  ctx.fillText('🔌', STATION.x+2, sy+62);
+
+  // Aim beam — dashed, upgrade color
+  const dx = mx-STATION.x, dy = my-STATION.y;
+  const dist = Math.sqrt(dx*dx+dy*dy)||1;
+  ctx.strokeStyle = up.color + '28';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([5, 12]);
+  ctx.beginPath();
+  ctx.moveTo(STATION.x, STATION.y);
+  ctx.lineTo(STATION.x + (dx/dist)*W, STATION.y + (dy/dist)*W);
+  ctx.stroke();
+  ctx.setLineDash([]);
+}
+
+// ── Draw EV ───────────────────────────────────────────────────────────────────
+function drawEV(ev) {
+  const pct = ev.charged / ev.maxHp;
+
+  // Hit flash
+  if (ev.hitFlash > 0) {
+    ctx.fillStyle = `rgba(248,106,27,${ev.hitFlash/12})`;
+    ctx.beginPath();
+    ctx.roundRect(ev.x-ev.w/2-4, ev.y-ev.h/2-4, ev.w+8, ev.h+8, 4);
+    ctx.fill();
+  }
+
+  ctx.save();
+  ctx.translate(ev.x, ev.y);
+  ctx.rotate(Math.sin(frameN*0.08+ev.y)*0.022);
+
+  // Body — grey when empty, shifts to CP brand blue when charged
+  ctx.fillStyle = lerpColor('#2a3a4a', ev.model.color, pct);
+  ctx.beginPath(); ctx.roundRect(-ev.w/2, -ev.h/2, ev.w, ev.h, 4); ctx.fill();
+
+  // Glow when nearly full
+  if (pct > 0.5) {
+    ctx.shadowBlur = 14 * pct;
+    ctx.shadowColor = CP.orange;
+  }
+
+  // Roof
+  ctx.fillStyle = lerpColor('#1a2530', '#cce8f4', pct * 0.5);
+  ctx.fillRect(-ev.w/2+8, -ev.h/2, ev.w-18, ev.h/2);
+  ctx.shadowBlur = 0;
+
+  // Emoji
+  ctx.font = '15px serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(ev.model.emoji, 0, 6);
+
+  ctx.restore();
+
+  // Battery bar — CP color scheme: red → yellow → green
+  const bw = ev.w+10, bx = ev.x-bw/2, by = ev.y-ev.h/2-15;
+  ctx.fillStyle = 'rgba(0,0,0,0.55)';
+  ctx.fillRect(bx, by, bw, 9);
+  ctx.fillStyle = pct < 0.4 ? CP.red : pct < 0.7 ? CP.yellow : CP.green;
+  ctx.fillRect(bx, by, bw*pct, 9);
+  ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+  ctx.lineWidth = 1;
+  ctx.strokeRect(bx, by, bw, 9);
+
+  // EV name
+  ctx.fillStyle = 'rgba(148,210,233,0.6)';
+  ctx.font = '8px Arial';
+  ctx.textAlign = 'center';
+  ctx.fillText(ev.model.name, ev.x, by-2);
+
+  // Fully charged badge
+  if (ev.full) {
+    ctx.font = '13px serif';
+    ctx.fillText('✅', ev.x, ev.y - ev.h/2 - 24);
+  }
+}
+
+// ── Draw bullet ───────────────────────────────────────────────────────────────
+function drawBullet(b) {
+  ctx.save();
+  ctx.shadowBlur = 14;
+  ctx.shadowColor = b.color;
+  ctx.fillStyle = b.color;
+  ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, Math.PI*2); ctx.fill();
+  ctx.globalAlpha = 0.3;
+  ctx.beginPath(); ctx.arc(b.x-b.vx*1.5, b.y-b.vy*1.5, b.r*0.7, 0, Math.PI*2); ctx.fill();
+  ctx.restore();
+}
+
+// ── Draw particles / sparks ───────────────────────────────────────────────────
+function drawParticles() {
+  for (const p of particles) {
+    ctx.globalAlpha = p.life / 50;
+    ctx.fillStyle = p.color;
+    ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+}
+function drawSparks() {
+  for (const s of sparks) {
+    ctx.globalAlpha = s.life / 32;
+    ctx.strokeStyle = CP.yellow;
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(s.x, s.y);
+    ctx.lineTo(s.x+s.vx*4, s.y+s.vy*4);
+    ctx.stroke();
+  }
+  ctx.globalAlpha = 1;
+}
+
+// ── HUD ───────────────────────────────────────────────────────────────────────
+function drawHUD() {
+  const up = UPGRADES[upgradeLevel];
+
+  // Top bar background
+  ctx.fillStyle = 'rgba(6,28,46,0.85)';
+  ctx.fillRect(0, 0, W, 34);
+  // Orange underline on top bar
+  ctx.fillStyle = CP.orange;
+  ctx.fillRect(0, 34, W, 2);
+
+  // Lives (orange bolts)
+  ctx.textAlign = 'left';
+  ctx.font = 'bold 13px Arial';
+  ctx.fillStyle = CP.lightBlue;
+  ctx.fillText('LIVES', 14, 22);
+  ctx.font = '14px serif';
+  for (let i = 0; i < 3; i++) {
+    ctx.fillText(i < lives ? '⚡' : '○', 58 + i*18, 22);
+  }
+
+  // Charger label — callout style
+  ctx.fillStyle = up.color;
+  ctx.font = 'bold 11px Arial';
+  ctx.textAlign = 'left';
+  ctx.fillText(`▶ ${up.name}`, 120, 22);
+
+  // Score — right aligned, orange value
+  ctx.textAlign = 'right';
+  ctx.fillStyle = CP.steelBlue;
+  ctx.font = 'bold 11px Arial';
+  ctx.fillText('SCORE', W - 80, 22);
+  ctx.fillStyle = CP.orange;
+  ctx.font = 'bold 14px Arial';
+  ctx.fillText(score, W - 14, 22);
+
+  // Update footer score badge
+  document.getElementById('footerScore').textContent = `Score: ${score}`;
+
+  // Bottom strip
+  ctx.fillStyle = 'rgba(6,28,46,0.75)';
+  ctx.fillRect(0, H-26, W, 26);
+
+  // Charged counter (green, like CP green = positive/success)
+  ctx.fillStyle = CP.green;
+  ctx.font = 'bold 11px Arial';
+  ctx.textAlign = 'left';
+  ctx.fillText(`✅ ${chargedCount} EVs Charged`, 14, H-10);
+
+  // Wave
+  ctx.fillStyle = CP.steelBlue;
+  ctx.textAlign = 'right';
+  ctx.fillText(`Wave ${wave}`, W-14, H-10);
+
+  // Wave label banner — big, centered, fades out
+  if (waveLabelTimer > 0) {
+    ctx.globalAlpha = Math.min(1, waveLabelTimer / 30);
+    ctx.shadowBlur = 24;
+    ctx.shadowColor = CP.orange;
+    ctx.fillStyle = CP.white;
+    ctx.font = 'bold 34px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText(waveLabel, W/2, H/2 - 70);
+    // Orange rule under wave label (h2::after style)
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = CP.orange;
+    ctx.fillRect(W/2 - 40, H/2 - 60, 80, 3);
+    ctx.globalAlpha = 1;
+  }
+}
+
+// ── Update ────────────────────────────────────────────────────────────────────
+function update() {
+  frameN++;
+  if (shootCooldown > 0) shootCooldown--;
+  shoot(); // always auto-fire toward cursor
+
+  // Screen shake
+  if (shakeMag > 0) {
+    shakeX = (Math.random()-.5)*shakeMag*2;
+    shakeY = (Math.random()-.5)*shakeMag*2;
+    shakeMag *= 0.84;
+    if (shakeMag < 0.3) shakeMag = 0;
+  } else { shakeX = 0; shakeY = 0; }
+
+  // Spawn wave
+  if (waveSpawnLeft > 0) {
+    waveTimer--;
+    if (waveTimer <= 0) { spawnEV(); waveSpawnLeft--; waveTimer = waveSpawnInterval; }
+  }
+
+  // Next wave
+  if (waveSpawnLeft === 0 && evs.length === 0) {
+    wave++;
+    startWave(wave);
+    const newUp = Math.min(3, Math.floor((wave-1)/3));
+    if (newUp > upgradeLevel) {
+      waveLabel = `Upgraded: ${UPGRADES[newUp].name}`;
+      spawnParticles(STATION.x, STATION.y, UPGRADES[newUp].color, 30, 5);
+    }
+    upgradeLevel = newUp;
+  }
+
+  // Update bullets
+  for (let i = bullets.length-1; i >= 0; i--) {
+    const b = bullets[i];
+    b.x += b.vx; b.y += b.vy; b.life--;
+    if (b.life <= 0 || b.x > W || b.x < 0 || b.y < 0 || b.y > H) { bullets.splice(i,1); continue; }
+    for (const ev of evs) {
+      if (ev.full) continue;
+      if (Math.abs(b.x-ev.x) < ev.w/2+4 && Math.abs(b.y-ev.y) < ev.h/2+4) {
+        ev.charged++;
+        ev.hitFlash = 8;
+        spawnParticles(b.x, b.y, UPGRADES[upgradeLevel].shotColor, 5, 3);
+        bullets.splice(i,1);
+        if (ev.charged >= ev.maxHp) {
+          ev.full = true;
+          chargedCount++;
+          score += ev.model.reward * wave;
+          screenShake(4);
+          spawnParticles(ev.x, ev.y, CP.orange, 22, 5);
+          ev.exitTimer = 60;
+        }
+        break;
+      }
+    }
+  }
+
+  // Update EVs
+  for (let i = evs.length-1; i >= 0; i--) {
+    const ev = evs[i];
+    if (ev.hitFlash > 0) ev.hitFlash--;
+    if (ev.charged > 0 && !ev.full && frameN % 8 === 0) spawnSpark(ev.x, ev.y);
+
+    if (ev.full) {
+      ev.exitTimer--;
+      ev.x -= ev.speed * 2;
+      ev.y -= 1;
+      if (ev.exitTimer <= 0 || ev.x < -60) evs.splice(i,1);
+      continue;
+    }
+
+    ev.x -= ev.speed;
+    if (ev.x < STATION.x + STATION.w/2 + 10) {
+      lives--;
+      screenShake(10);
+      spawnParticles(ev.x, ev.y, CP.red, 20, 6);
+      evs.splice(i,1);
+      if (lives <= 0) { gameOver(); return; }
+    }
+  }
+
+  // Update particles
+  for (let i = particles.length-1; i>=0; i--) {
+    const p = particles[i];
+    p.x+=p.vx; p.y+=p.vy; p.vy+=0.1; p.life--;
+    if (p.life<=0) particles.splice(i,1);
+  }
+  // Update sparks
+  for (let i = sparks.length-1; i>=0; i--) {
+    const s = sparks[i];
+    s.x+=s.vx; s.y+=s.vy; s.life--;
+    if (s.life<=0) sparks.splice(i,1);
+  }
+  if (waveLabelTimer>0) waveLabelTimer--;
+}
+
+// ── Game over ─────────────────────────────────────────────────────────────────
+function gameOver() {
+  state = 'gameover';
+  pauseBtn.classList.add('hidden');
+  document.getElementById('goStats').innerHTML = `
+    <tr><td>Final Score</td><td><strong>${score}</strong></td></tr>
+    <tr><td>EVs Charged</td><td><strong>${chargedCount}</strong></td></tr>
+    <tr><td>Waves Survived</td><td><strong>${wave}</strong></td></tr>
+    <tr><td>Best Charger</td><td><strong>${UPGRADES[upgradeLevel].name}</strong></td></tr>
+  `;
+  document.getElementById('goScreen').classList.remove('hidden');
+}
+
+// ── Main loop ─────────────────────────────────────────────────────────────────
+function loop() {
+  if (state !== 'playing') return;
+  requestAnimationFrame(loop);
+  if (paused) return;
+  update();
+  ctx.save();
+  ctx.translate(shakeX, shakeY);
+  drawBg();
+  drawStation();
+  for (const ev of evs) drawEV(ev);
+  for (const b of bullets) drawBullet(b);
+  drawSparks();
+  drawParticles();
+  drawHUD();
+  ctx.restore();
+}
+
+// ── Initial canvas preview ────────────────────────────────────────────────────
+(function preview() {
+  const grad = ctx.createLinearGradient(0,0,W,H);
+  grad.addColorStop(0,'#092e4a'); grad.addColorStop(1,'#061c2e');
+  ctx.fillStyle = grad; ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle='rgba(121,156,174,0.08)'; ctx.lineWidth=1;
+  for(let x=0;x<W;x+=50){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+  for(let y=0;y<H;y+=50){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+  ctx.fillStyle='#f86a1b'; ctx.fillRect(0,0,4,H);
+})();
+
 })();
 </script>
 
